@@ -128,10 +128,10 @@
 
             <!-- Categories -->
             <div class="flex gap-3 overflow-x-auto no-scrollbar mb-6 pb-2">
-                <button class="flex-shrink-0 px-5 py-2 rounded-full bg-blue-600 text-white text-sm font-medium shadow-lg shadow-blue-900/20">الكل</button>
-                <button class="flex-shrink-0 px-5 py-2 rounded-full bg-slate-800 text-slate-300 text-sm font-medium border border-slate-700">طبية</button>
-                <button class="flex-shrink-0 px-5 py-2 rounded-full bg-slate-800 text-slate-300 text-sm font-medium border border-slate-700">هندسية</button>
-                <button class="flex-shrink-0 px-5 py-2 rounded-full bg-slate-800 text-slate-300 text-sm font-medium border border-slate-700">قانون</button>
+                <button onclick="filterProducts('all')" data-cat="all" class="category-btn flex-shrink-0 px-5 py-2 rounded-full bg-blue-600 text-white text-sm font-medium shadow-lg shadow-blue-900/20 transition-all">الكل</button>
+                <button onclick="filterProducts('طبية')" data-cat="طبية" class="category-btn flex-shrink-0 px-5 py-2 rounded-full bg-slate-800 text-slate-300 text-sm font-medium border border-slate-700 transition-all">طبية</button>
+                <button onclick="filterProducts('هندسية')" data-cat="هندسية" class="category-btn flex-shrink-0 px-5 py-2 rounded-full bg-slate-800 text-slate-300 text-sm font-medium border border-slate-700 transition-all">هندسية</button>
+                <button onclick="filterProducts('قانون')" data-cat="قانون" class="category-btn flex-shrink-0 px-5 py-2 rounded-full bg-slate-800 text-slate-300 text-sm font-medium border border-slate-700 transition-all">قانون</button>
             </div>
 
             <!-- Products Grid -->
@@ -359,6 +359,7 @@
         let isAdminLoggedIn = false;
         let isDemoMode = false; // Runs without DB if true
         let productToDeleteId = null; // Stores ID for deletion
+        let currentCategory = 'all';
 
         // Initialize App
         async function initAuth() {
@@ -691,25 +692,51 @@
 
         // --- UI Rendering ---
 
+        window.filterProducts = function(category) {
+            currentCategory = category;
+            
+            // Update Buttons UI
+            document.querySelectorAll('.category-btn').forEach(btn => {
+                if(btn.dataset.cat === category) {
+                    // Active style
+                    btn.className = "category-btn flex-shrink-0 px-5 py-2 rounded-full bg-blue-600 text-white text-sm font-medium shadow-lg shadow-blue-900/20 transition-all";
+                } else {
+                    // Inactive style
+                    btn.className = "category-btn flex-shrink-0 px-5 py-2 rounded-full bg-slate-800 text-slate-300 text-sm font-medium border border-slate-700 transition-all";
+                }
+            });
+
+            renderProducts();
+        }
+
         function renderProducts() {
             const grid = document.getElementById('products-grid');
             
-            if (products.length === 0) {
+            // Filter Products based on category
+            let displayProducts = products;
+            if (currentCategory !== 'all') {
+                displayProducts = products.filter(p => p.tag === currentCategory);
+            }
+
+            if (displayProducts.length === 0) {
                  grid.innerHTML = `
                     <div class="text-center py-20 text-slate-500 col-span-1">
                         <i class="fa-solid fa-box-open text-4xl mb-4 opacity-50"></i>
-                        <p>لا توجد بحوث معروضة حالياً.</p>
-                        <p class="text-xs mt-2 text-slate-600">سيتم نشر بحوث جديدة قريباً.</p>
+                        <p>لا توجد بحوث في هذا القسم حالياً.</p>
+                        ${currentCategory !== 'all' ? `<button onclick="filterProducts('all')" class="text-blue-400 text-xs mt-2 underline">عرض الكل</button>` : ''}
                     </div>
                  `;
                  return;
             }
 
-            grid.innerHTML = products.map(product => `
+            grid.innerHTML = displayProducts.map(product => `
                 <div class="glass-card rounded-2xl p-3 flex gap-4 items-center animate-fade-in relative group overflow-hidden">
                     <div class="w-24 h-24 rounded-xl bg-slate-800 flex-shrink-0 overflow-hidden relative">
                          <img src="${product.image}" alt="${product.title}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/100x100/1e293b/FFF?text=PDF'">
-                         <div class="absolute top-0 right-0 bg-blue-600 px-2 py-0.5 text-[10px] rounded-bl-lg text-white font-bold shadow">${product.price} د.ع</div>
+                         <div class="absolute top-0 right-0 bg-blue-600 px-2 py-1 text-[10px] rounded-bl-lg text-white font-bold shadow text-center leading-3">
+                            ${product.price} د.ع
+                            <div class="text-[8px] font-normal opacity-90">شامل التوصيل</div>
+                         </div>
                     </div>
                     <div class="flex-1">
                         <span class="text-[10px] text-slate-400 border border-slate-600 px-1.5 py-0.5 rounded-md mb-1 inline-block">${product.tag || 'عام'}</span>
@@ -727,8 +754,23 @@
         }
 
         function renderEmptyState() {
-            // Updated: Empty list as requested by user to "delete all products" (initial state)
-            products = [];
+            // Added 9 Dummy Products as requested (3 Medical, 3 Engineering, 3 Law)
+            products = [
+                // Medical (طبية)
+                { id: 'm1', title: 'تأثير المضادات الحيوية على البكتيريا', price: '15,000', tag: 'طبية', image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=500&auto=format&fit=crop&q=60' },
+                { id: 'm2', title: 'ارتفاع ضغط الدم: الأسباب والعلاج', price: '15,000', tag: 'طبية', image: 'https://images.unsplash.com/photo-1576091160550-217358c7e618?w=500&auto=format&fit=crop&q=60' },
+                { id: 'm3', title: 'دور التغذية في تعزيز المناعة', price: '15,000', tag: 'طبية', image: 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=500&auto=format&fit=crop&q=60' },
+                
+                // Engineering (هندسة الحاسوب)
+                { id: 'e1', title: 'مادة دوائر الكترونية (Electronic Circuits)', price: '15,000', tag: 'هندسية', image: 'https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?w=500&auto=format&fit=crop&q=60' },
+                { id: 'e2', title: 'معمارية الحاسوب (Computer Architecture)', price: '15,000', tag: 'هندسية', image: 'https://images.unsplash.com/photo-1555680202-c86f0e12f086?w=500&auto=format&fit=crop&q=60' },
+                { id: 'e3', title: 'الأنظمة المدمجة (Embedded Systems)', price: '15,000', tag: 'هندسية', image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=500&auto=format&fit=crop&q=60' },
+
+                // Law (قانون)
+                { id: 'l1', title: 'الحماية الجنائية للملكية الفكرية', price: '15,000', tag: 'قانون', image: 'https://images.unsplash.com/photo-1589829085413-56de8ae18c73?w=500&auto=format&fit=crop&q=60' },
+                { id: 'l2', title: 'حقوق الإنسان في الدساتير العربية', price: '15,000', tag: 'قانون', image: 'https://images.unsplash.com/photo-1453928582365-b6ad33cbcf64?w=500&auto=format&fit=crop&q=60' },
+                { id: 'l3', title: 'الجرائم الالكترونية في القانون العراقي', price: '15,000', tag: 'قانون', image: 'https://images.unsplash.com/photo-1505664194779-8beaceb93744?w=500&auto=format&fit=crop&q=60' }
+            ];
             renderProducts();
         }
 
