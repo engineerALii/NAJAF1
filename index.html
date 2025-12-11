@@ -178,32 +178,46 @@
 
                 <!-- Tabs for Admin -->
                 <div class="flex gap-2 mb-6 bg-slate-800 p-1 rounded-xl">
-                    <button onclick="switchAdminTab('orders')" id="tab-btn-orders" class="flex-1 py-2 rounded-lg text-sm font-medium bg-slate-600 text-white shadow">الطلبات</button>
-                    <button onclick="switchAdminTab('add-product')" id="tab-btn-add" class="flex-1 py-2 rounded-lg text-sm font-medium text-slate-400 hover:bg-slate-700/50">نشر جديد</button>
+                    <button onclick="switchAdminTab('orders')" id="tab-btn-orders" class="flex-1 py-2 rounded-lg text-xs font-medium bg-slate-600 text-white shadow">الطلبات</button>
+                    <button onclick="switchAdminTab('products')" id="tab-btn-products" class="flex-1 py-2 rounded-lg text-xs font-medium text-slate-400 hover:bg-slate-700/50">المنتجات</button>
+                    <button onclick="switchAdminTab('add-product')" id="tab-btn-add" class="flex-1 py-2 rounded-lg text-xs font-medium text-slate-400 hover:bg-slate-700/50">نشر جديد</button>
                 </div>
 
                 <!-- Admin: Orders List -->
                 <div id="admin-view-orders">
                     <div id="orders-list" class="space-y-3">
-                        <!-- Orders injected here -->
                         <div class="text-center text-slate-500 py-4">جاري تحميل الطلبات...</div>
                     </div>
                 </div>
 
-                <!-- Admin: Add Product -->
+                <!-- Admin: Manage Products List -->
+                <div id="admin-view-products" class="hidden">
+                    <div id="admin-products-list" class="space-y-3">
+                        <div class="text-center text-slate-500 py-4">جاري تحميل المنتجات...</div>
+                    </div>
+                </div>
+
+                <!-- Admin: Add/Edit Product -->
                 <div id="admin-view-add" class="hidden">
                     <div class="glass-card p-5 rounded-2xl space-y-4">
-                        <h3 class="font-bold text-blue-400 mb-2">إضافة تقرير/بحث جديد</h3>
-                        <input type="text" id="new-prod-title" placeholder="عنوان البحث" class="w-full bg-slate-900 border border-slate-700 p-3 rounded-xl text-sm">
-                        <input type="number" id="new-prod-price" placeholder="السعر (د.ع)" class="w-full bg-slate-900 border border-slate-700 p-3 rounded-xl text-sm">
-                        <input type="text" id="new-prod-image" placeholder="رابط الصورة (URL)" class="w-full bg-slate-900 border border-slate-700 p-3 rounded-xl text-sm">
-                        <select id="new-prod-tag" class="w-full bg-slate-900 border border-slate-700 p-3 rounded-xl text-sm text-slate-400">
+                        <div class="flex justify-between items-center">
+                            <h3 id="form-title" class="font-bold text-blue-400 mb-2">إضافة تقرير/بحث جديد</h3>
+                            <button onclick="resetForm()" class="text-[10px] text-slate-400 bg-slate-800 px-2 py-1 rounded hidden" id="reset-form-btn">إلغاء التعديل</button>
+                        </div>
+                        
+                        <input type="hidden" id="edit-prod-id">
+                        
+                        <input type="text" id="new-prod-title" placeholder="عنوان البحث" class="w-full bg-slate-900 border border-slate-700 p-3 rounded-xl text-sm focus:border-blue-500 outline-none">
+                        <input type="number" id="new-prod-price" placeholder="السعر (د.ع)" class="w-full bg-slate-900 border border-slate-700 p-3 rounded-xl text-sm focus:border-blue-500 outline-none">
+                        <input type="text" id="new-prod-image" placeholder="رابط الصورة (URL)" class="w-full bg-slate-900 border border-slate-700 p-3 rounded-xl text-sm focus:border-blue-500 outline-none">
+                        <select id="new-prod-tag" class="w-full bg-slate-900 border border-slate-700 p-3 rounded-xl text-sm text-slate-400 outline-none">
                             <option value="عام">عام</option>
                             <option value="طبية">طبية</option>
                             <option value="هندسية">هندسية</option>
                             <option value="إدارة">إدارة واقتصاد</option>
+                            <option value="قانون">قانون</option>
                         </select>
-                        <button onclick="addNewProduct()" class="w-full bg-green-600 hover:bg-green-500 py-3 rounded-xl font-bold btn-press">نشر في المتجر</button>
+                        <button onclick="saveProduct()" id="save-prod-btn" class="w-full bg-green-600 hover:bg-green-500 py-3 rounded-xl font-bold btn-press shadow-lg shadow-green-900/20">نشر في المتجر</button>
                     </div>
                 </div>
             </div>
@@ -280,7 +294,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, collection, addDoc, getDocs, serverTimestamp, query, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, getDocs, serverTimestamp, query, orderBy, doc, deleteDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // --- Firebase Setup ---
         const userProvidedConfig = {
@@ -366,13 +380,100 @@
             }
         }
 
-        // Add Product (Admin Only)
-        window.addNewProduct = async function() {
-            if(isDemoMode) {
-                showToast("لا يمكن النشر في الوضع التجريبي", true);
+        // Fetch Products for Admin List
+        window.fetchAdminProducts = function() {
+            const list = document.getElementById('admin-products-list');
+            
+            if (products.length === 0) {
+                list.innerHTML = '<div class="text-center text-slate-500 py-6">لا توجد منتجات حالياً</div>';
                 return;
             }
 
+            list.innerHTML = products.map(product => `
+                <div class="bg-slate-700/50 p-3 rounded-xl border border-slate-600 flex items-center gap-3">
+                    <img src="${product.image}" class="w-12 h-12 rounded-lg object-cover bg-slate-800" onerror="this.src='https://placehold.co/100x100'">
+                    <div class="flex-1 min-w-0">
+                        <h4 class="font-bold text-white text-sm truncate">${product.title}</h4>
+                        <p class="text-[10px] text-slate-400">${product.price} د.ع</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="editProduct('${product.id}')" class="w-8 h-8 rounded-lg bg-blue-600/20 text-blue-400 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-colors">
+                            <i class="fa-solid fa-pen text-xs"></i>
+                        </button>
+                        <button onclick="deleteProduct('${product.id}')" class="w-8 h-8 rounded-lg bg-red-600/20 text-red-400 flex items-center justify-center hover:bg-red-600 hover:text-white transition-colors">
+                            <i class="fa-solid fa-trash text-xs"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Delete Product
+        window.deleteProduct = async function(id) {
+            if(!confirm('هل أنت متأكد من حذف هذا البحث؟')) return;
+            
+            if(isDemoMode) {
+                showToast("لا يمكن الحذف في الوضع التجريبي", true);
+                return;
+            }
+
+            try {
+                await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'products', id));
+                showToast("تم الحذف بنجاح");
+                
+                // Refresh data
+                await fetchProducts();
+                fetchAdminProducts(); // Refresh admin view
+            } catch (error) {
+                console.error("Delete Error", error);
+                showToast("حدث خطأ أثناء الحذف", true);
+            }
+        }
+
+        // Edit Product (Setup Form)
+        window.editProduct = function(id) {
+            const product = products.find(p => p.id === id);
+            if(!product) return;
+
+            document.getElementById('edit-prod-id').value = product.id;
+            document.getElementById('new-prod-title').value = product.title;
+            document.getElementById('new-prod-price').value = product.price.replace(/[^\d]/g, ''); // Remove non-digits if formatted
+            document.getElementById('new-prod-image').value = product.image;
+            document.getElementById('new-prod-tag').value = product.tag || 'عام';
+
+            // UI Changes
+            document.getElementById('form-title').innerText = "تعديل البحث";
+            document.getElementById('save-prod-btn').innerText = "حفظ التعديلات";
+            document.getElementById('save-prod-btn').classList.remove('bg-green-600', 'hover:bg-green-500');
+            document.getElementById('save-prod-btn').classList.add('bg-blue-600', 'hover:bg-blue-500');
+            document.getElementById('reset-form-btn').classList.remove('hidden');
+
+            switchAdminTab('add-product');
+        }
+
+        // Reset Form
+        window.resetForm = function() {
+            document.getElementById('edit-prod-id').value = "";
+            document.getElementById('new-prod-title').value = "";
+            document.getElementById('new-prod-price').value = "";
+            document.getElementById('new-prod-image').value = "";
+            document.getElementById('new-prod-tag').value = "عام";
+
+            document.getElementById('form-title').innerText = "إضافة تقرير/بحث جديد";
+            document.getElementById('save-prod-btn').innerText = "نشر في المتجر";
+            document.getElementById('save-prod-btn').classList.add('bg-green-600', 'hover:bg-green-500');
+            document.getElementById('save-prod-btn').classList.remove('bg-blue-600', 'hover:bg-blue-500');
+            document.getElementById('reset-form-btn').classList.add('hidden');
+        }
+
+        // Save (Add or Update) Product
+        window.saveProduct = async function() {
+            if(isDemoMode) {
+                showToast("لا يمكن التعديل في الوضع التجريبي", true);
+                return;
+            }
+
+            const id = document.getElementById('edit-prod-id').value;
             const title = document.getElementById('new-prod-title').value;
             const price = document.getElementById('new-prod-price').value;
             const image = document.getElementById('new-prod-image').value;
@@ -383,28 +484,38 @@
                 return;
             }
 
-            const btn = document.querySelector('#admin-view-add button');
+            const btn = document.getElementById('save-prod-btn');
+            const originalText = btn.innerText;
             btn.innerHTML = '<div class="loader border-white/30 border-t-white w-5 h-5"></div>';
             
             try {
-                const productsRef = collection(db, 'artifacts', appId, 'public', 'data', 'products');
-                await addDoc(productsRef, {
+                const productData = {
                     title,
-                    price,
+                    price: price.toLocaleString(), // Add simple formatting if needed
                     image: image || "https://images.unsplash.com/photo-1532012197267-da84d127e765?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
                     tag,
-                    createdAt: serverTimestamp()
-                });
+                    updatedAt: serverTimestamp()
+                };
+
+                if (id) {
+                    // Update
+                    await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'products', id), productData);
+                    showToast("تم تحديث البحث بنجاح");
+                } else {
+                    // Create
+                    productData.createdAt = serverTimestamp();
+                    const productsRef = collection(db, 'artifacts', appId, 'public', 'data', 'products');
+                    await addDoc(productsRef, productData);
+                    showToast("تم نشر البحث بنجاح");
+                }
                 
-                showToast("تم نشر البحث بنجاح");
-                document.getElementById('new-prod-title').value = "";
-                document.getElementById('new-prod-price').value = "";
+                resetForm();
                 fetchProducts();
             } catch (e) {
                 console.error(e);
-                showToast("فشل النشر: " + e.message, true);
+                showToast("فشل العملية: " + e.message, true);
             } finally {
-                btn.innerHTML = 'نشر في المتجر';
+                btn.innerText = id ? "حفظ التعديلات" : "نشر في المتجر";
             }
         }
 
@@ -599,21 +710,41 @@
         }
 
         window.switchAdminTab = function(tab) {
+            // Reset Tabs style
+            ['orders', 'products', 'add'].forEach(t => {
+                const btn = document.getElementById(`tab-btn-${t}`);
+                if(t === 'add') t = 'add-product'; // fix naming inconsistency in logic
+                
+                // reset all to gray
+                btn.classList.remove('bg-slate-600', 'text-white');
+                btn.classList.add('text-slate-400');
+            });
+            
+            // Hide all Views
+            document.getElementById('admin-view-orders').classList.add('hidden');
+            document.getElementById('admin-view-products').classList.add('hidden');
+            document.getElementById('admin-view-add').classList.add('hidden');
+
             if(tab === 'orders') {
                 document.getElementById('admin-view-orders').classList.remove('hidden');
-                document.getElementById('admin-view-add').classList.add('hidden');
                 document.getElementById('tab-btn-orders').classList.add('bg-slate-600', 'text-white');
                 document.getElementById('tab-btn-orders').classList.remove('text-slate-400');
-                document.getElementById('tab-btn-add').classList.remove('bg-slate-600', 'text-white');
-                document.getElementById('tab-btn-add').classList.add('text-slate-400');
                 fetchOrders();
-            } else {
-                document.getElementById('admin-view-orders').classList.add('hidden');
+            } 
+            else if (tab === 'products') {
+                document.getElementById('admin-view-products').classList.remove('hidden');
+                document.getElementById('tab-btn-products').classList.add('bg-slate-600', 'text-white');
+                document.getElementById('tab-btn-products').classList.remove('text-slate-400');
+                fetchAdminProducts();
+            }
+            else if (tab === 'add-product') {
                 document.getElementById('admin-view-add').classList.remove('hidden');
                 document.getElementById('tab-btn-add').classList.add('bg-slate-600', 'text-white');
                 document.getElementById('tab-btn-add').classList.remove('text-slate-400');
-                document.getElementById('tab-btn-orders').classList.remove('bg-slate-600', 'text-white');
-                document.getElementById('tab-btn-orders').classList.add('text-slate-400');
+                // If switching manually, reset form to "Add Mode" if it was in "Edit Mode" but user clicked away
+                // But if we called this via editProduct(), we want to keep it.
+                // We can check if the call came from a button click event vs function call, 
+                // simpler is to just let the user see the form as is. If they want to clear, they use the cancel button.
             }
         }
 
