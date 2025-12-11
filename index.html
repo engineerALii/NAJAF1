@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>منصة الطالب</title>
+    <link rel="icon" href="https://static.vecteezy.com/system/resources/previews/023/221/041/non_2x/open-book-school-supply-icon-free-png.png" type="image/png">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts (Tajawal) -->
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+
+    <style>
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: #0f172a; /* Slate 900 */
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* iOS Scrollbar Hide */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* iOS Glassmorphism */
+        .glass {
+            background: rgba(30, 41, 59, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .glass-card {
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Button Press Effect */
+        .btn-press:active {
+            transform: scale(0.96);
+        }
+
+        /* Loading Spinner */
+        .loader {
+            border: 3px solid #f3f3f3;
+            border-radius: 50%;
+            border-top: 3px solid #3b82f6;
+            width: 20px;
+            height: 20px;
+            -webkit-animation: spin 1s linear infinite; /* Safari */
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="text-white min-h-screen pb-24 selection:bg-blue-500 selection:text-white">
+
+    <!-- Header -->
+    <header class="fixed top-0 w-full z-40 glass pt-safe-top transition-all duration-300">
+        <div class="flex justify-between items-center px-5 py-4">
+            <div>
+                <h1 class="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">منصة الطالب</h1>
+                <p class="text-xs text-slate-400">متجرك الأول للبحوث والتقارير</p>
+            </div>
+            <div class="relative">
+                <div class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center border border-slate-700 shadow-lg">
+                    <i class="fa-solid fa-graduation-cap text-blue-400"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area -->
+    <main id="main-content" class="pt-24 px-4 fade-in container mx-auto max-w-md">
+        
+        <!-- VIEW: Home (Store) -->
+        <div id="view-home" class="view-section">
+            <!-- Search Bar -->
+            <div class="mb-6 relative">
+                <input type="text" id="search-input" placeholder="ابحث عن تقرير أو بحث..." 
+                    class="w-full bg-slate-800/50 border border-slate-700 rounded-2xl py-3 pr-10 pl-4 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all placeholder-slate-500">
+                <i class="fa-solid fa-search absolute right-4 top-3.5 text-slate-500"></i>
+            </div>
+
+            <!-- Categories -->
+            <div class="flex gap-3 overflow-x-auto no-scrollbar mb-6 pb-2">
+                <button class="flex-shrink-0 px-5 py-2 rounded-full bg-blue-600 text-white text-sm font-medium shadow-lg shadow-blue-900/20">الكل</button>
+                <button class="flex-shrink-0 px-5 py-2 rounded-full bg-slate-800 text-slate-300 text-sm font-medium border border-slate-700">طبية</button>
+                <button class="flex-shrink-0 px-5 py-2 rounded-full bg-slate-800 text-slate-300 text-sm font-medium border border-slate-700">هندسية</button>
+                <button class="flex-shrink-0 px-5 py-2 rounded-full bg-slate-800 text-slate-300 text-sm font-medium border border-slate-700">قانون</button>
+            </div>
+
+            <!-- Products Grid -->
+            <div id="products-grid" class="grid grid-cols-1 gap-4">
+                <!-- Products will be injected here via JS -->
+                <div class="text-center py-10 text-slate-500">
+                    <div class="loader mx-auto mb-2"></div>
+                    جارٍ تحميل البحوث...
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW: Custom Request -->
+        <div id="view-custom" class="view-section hidden">
+            <h2 class="text-xl font-bold mb-4 px-1">طلب خاص</h2>
+            <div class="glass-card rounded-2xl p-5 shadow-lg">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm text-slate-400 mb-1">عنوان البحث / التقرير</label>
+                        <input type="text" id="custom-title" class="w-full bg-slate-900/50 border border-slate-700 rounded-xl p-3 focus:border-blue-500 outline-none transition-colors">
+                    </div>
+                    <div>
+                        <label class="block text-sm text-slate-400 mb-1">التفاصيل المطلوبة</label>
+                        <textarea id="custom-details" rows="4" class="w-full bg-slate-900/50 border border-slate-700 rounded-xl p-3 focus:border-blue-500 outline-none transition-colors" placeholder="اكتب تفاصيل طلبك هنا..."></textarea>
+                    </div>
+                    <button onclick="openOrderModal('طلب خاص', 0, 'custom')" class="w-full bg-gradient-to-r from-blue-600 to-blue-500 py-3.5 rounded-xl font-bold shadow-lg shadow-blue-900/30 btn-press">
+                        الانتقال لإكمال الطلب
+                    </button>
+                </div>
+            </div>
+            
+            <div class="mt-6 p-4 rounded-2xl bg-slate-800/30 border border-slate-700/50">
+                <div class="flex items-start gap-3">
+                    <i class="fa-solid fa-circle-info text-blue-400 mt-1"></i>
+                    <p class="text-sm text-slate-400 leading-relaxed">
+                        سيتم مراجعة طلبك وتحديد السعر المناسب ومن ثم التواصل معك عبر رقم الهاتف لتأكيد البدء بالعمل.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW: Admin Login / Dashboard -->
+        <div id="view-admin" class="view-section hidden">
+            
+            <!-- Login Screen -->
+            <div id="admin-login-screen" class="flex flex-col items-center justify-center py-10">
+                <div class="w-16 h-16 rounded-2xl bg-slate-800 flex items-center justify-center mb-6 shadow-xl border border-slate-700">
+                    <i class="fa-solid fa-lock text-2xl text-red-500"></i>
+                </div>
+                <h2 class="text-xl font-bold mb-2">دخول المشرف</h2>
+                <p class="text-slate-400 text-sm mb-6">يرجى إدخال كلمة المرور للمتابعة</p>
+                
+                <input type="password" id="admin-password" placeholder="كلمة المرور" class="w-full max-w-xs bg-slate-800 border border-slate-700 rounded-xl p-3 mb-4 text-center focus:border-red-500 outline-none">
+                <button onclick="checkAdmin()" class="w-full max-w-xs bg-slate-700 hover:bg-slate-600 py-3 rounded-xl font-medium transition-colors btn-press">دخول</button>
+                <p id="login-error" class="text-red-500 text-sm mt-3 hidden">كلمة المرور غير صحيحة</p>
+            </div>
+
+            <!-- Dashboard Screen -->
+            <div id="admin-dashboard" class="hidden">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-xl font-bold">لوحة التحكم</h2>
+                    <button onclick="logoutAdmin()" class="text-xs text-red-400 border border-red-400/30 px-3 py-1 rounded-lg">خروج</button>
+                </div>
+
+                <!-- Tabs for Admin -->
+                <div class="flex gap-2 mb-6 bg-slate-800 p-1 rounded-xl">
+                    <button onclick="switchAdminTab('orders')" id="tab-btn-orders" class="flex-1 py-2 rounded-lg text-sm font-medium bg-slate-600 text-white shadow">الطلبات</button>
+                    <button onclick="switchAdminTab('add-product')" id="tab-btn-add" class="flex-1 py-2 rounded-lg text-sm font-medium text-slate-400 hover:bg-slate-700/50">نشر جديد</button>
+                </div>
+
+                <!-- Admin: Orders List -->
+                <div id="admin-view-orders">
+                    <div id="orders-list" class="space-y-3">
+                        <!-- Orders injected here -->
+                        <div class="text-center text-slate-500 py-4">جاري تحميل الطلبات...</div>
+                    </div>
+                </div>
+
+                <!-- Admin: Add Product -->
+                <div id="admin-view-add" class="hidden">
+                    <div class="glass-card p-5 rounded-2xl space-y-4">
+                        <h3 class="font-bold text-blue-400 mb-2">إضافة تقرير/بحث جديد</h3>
+                        <input type="text" id="new-prod-title" placeholder="عنوان البحث" class="w-full bg-slate-900 border border-slate-700 p-3 rounded-xl text-sm">
+                        <input type="number" id="new-prod-price" placeholder="السعر (د.ع)" class="w-full bg-slate-900 border border-slate-700 p-3 rounded-xl text-sm">
+                        <input type="text" id="new-prod-image" placeholder="رابط الصورة (URL)" class="w-full bg-slate-900 border border-slate-700 p-3 rounded-xl text-sm">
+                        <select id="new-prod-tag" class="w-full bg-slate-900 border border-slate-700 p-3 rounded-xl text-sm text-slate-400">
+                            <option value="عام">عام</option>
+                            <option value="طبية">طبية</option>
+                            <option value="هندسية">هندسية</option>
+                            <option value="إدارة">إدارة واقتصاد</option>
+                        </select>
+                        <button onclick="addNewProduct()" class="w-full bg-green-600 hover:bg-green-500 py-3 rounded-xl font-bold btn-press">نشر في المتجر</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Bottom Navigation (iOS Style) -->
+    <nav class="fixed bottom-0 w-full glass pb-safe-bottom z-50">
+        <div class="flex justify-around items-center pt-3 pb-4 px-2">
+            <button onclick="switchTab('home')" class="nav-btn flex flex-col items-center gap-1 w-1/3 text-blue-500" data-target="view-home">
+                <i class="fa-solid fa-house text-xl mb-0.5"></i>
+                <span class="text-[10px] font-medium">الرئيسية</span>
+            </button>
+            <button onclick="switchTab('custom')" class="nav-btn flex flex-col items-center gap-1 w-1/3 text-slate-500" data-target="view-custom">
+                <i class="fa-solid fa-pen-to-square text-xl mb-0.5"></i>
+                <span class="text-[10px] font-medium">طلب خاص</span>
+            </button>
+            <button onclick="switchTab('admin')" class="nav-btn flex flex-col items-center gap-1 w-1/3 text-slate-500" data-target="view-admin">
+                <i class="fa-solid fa-user-shield text-xl mb-0.5"></i>
+                <span class="text-[10px] font-medium">الإدارة</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Order Modal -->
+    <div id="order-modal" class="fixed inset-0 z-[60] hidden">
+        <!-- Backdrop -->
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeOrderModal()"></div>
+        
+        <!-- Modal Content -->
+        <div class="absolute bottom-0 w-full bg-slate-900 rounded-t-3xl p-6 transform transition-transform duration-300 translate-y-full" id="order-modal-content">
+            <div class="w-12 h-1.5 bg-slate-700 rounded-full mx-auto mb-6"></div>
+            
+            <h3 class="text-xl font-bold mb-1">إكمال الطلب</h3>
+            <p id="modal-item-name" class="text-slate-400 text-sm mb-6">اسم العنصر</p>
+
+            <form id="order-form" onsubmit="submitOrder(event)" class="space-y-4">
+                <input type="hidden" id="order-item-id">
+                <input type="hidden" id="order-item-type"> <!-- 'product' or 'custom' -->
+                <input type="hidden" id="order-item-price">
+                
+                <div class="relative">
+                    <i class="fa-solid fa-user absolute right-4 top-3.5 text-slate-500 text-sm"></i>
+                    <input type="text" id="customer-name" required placeholder="الاسم الكامل" class="w-full bg-slate-800 border border-slate-700 rounded-xl py-3 pr-10 pl-4 text-sm focus:border-blue-500 outline-none">
+                </div>
+
+                <div class="relative">
+                    <i class="fa-solid fa-phone absolute right-4 top-3.5 text-slate-500 text-sm"></i>
+                    <input type="tel" id="customer-phone" required placeholder="رقم الهاتف" class="w-full bg-slate-800 border border-slate-700 rounded-xl py-3 pr-10 pl-4 text-sm focus:border-blue-500 outline-none">
+                </div>
+
+                <div class="relative">
+                    <i class="fa-solid fa-location-dot absolute right-4 top-3.5 text-slate-500 text-sm"></i>
+                    <input type="text" id="customer-address" required placeholder="العنوان (المحافظة / المنطقة)" class="w-full bg-slate-800 border border-slate-700 rounded-xl py-3 pr-10 pl-4 text-sm focus:border-blue-500 outline-none">
+                </div>
+
+                <button type="submit" id="confirm-order-btn" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-4 rounded-xl mt-4 shadow-lg shadow-blue-900/40 btn-press flex justify-center items-center gap-2">
+                    <span>تأكيد الطلب</span>
+                    <i class="fa-solid fa-paper-plane"></i>
+                </button>
+            </form>
+            <div class="h-8"></div> <!-- Spacer for safe area -->
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="fixed top-6 left-1/2 transform -translate-x-1/2 bg-slate-800 border border-slate-600 text-white px-6 py-3 rounded-full shadow-2xl z-[70] flex items-center gap-3 transition-all duration-300 opacity-0 pointer-events-none translate-y-[-20px]">
+        <i class="fa-solid fa-check-circle text-green-500"></i>
+        <span id="toast-message" class="text-sm font-medium">تمت العملية بنجاح</span>
+    </div>
+
+    <!-- Firebase & Logic Script -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, getDocs, serverTimestamp, query, orderBy } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // --- Firebase Setup ---
+        const userProvidedConfig = {
+            apiKey: "AIzaSyD6MRZ7d7J1333erYoBrUGqocJNdGNjB7w",
+            authDomain: "neew-aec2b.firebaseapp.com",
+            databaseURL: "https://neew-aec2b-default-rtdb.firebaseio.com",
+            projectId: "neew-aec2b",
+            storageBucket: "neew-aec2b.firebasestorage.app",
+            messagingSenderId: "70112873200",
+            appId: "1:70112873200:web:b8ef2b3863be6f1bf39035"
+        };
+
+        const firebaseConfig = (typeof __firebase_config !== 'undefined') ? JSON.parse(__firebase_config) : userProvidedConfig;
+        const appId = (typeof __app_id !== 'undefined') ? __app_id : "student-platform-default";
+        
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // State
+        let products = [];
+        let isAdminLoggedIn = false;
+        let isDemoMode = false; // Runs without DB if true
+
+        // Initialize App
+        async function initAuth() {
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await signInAnonymously(auth);
+                }
+            } catch (error) {
+                console.error("Auth Init Error", error);
+                isDemoMode = true;
+                showToast("وضع العرض (بدون اتصال)", true);
+                renderEmptyState();
+            }
+        }
+
+        // Listen for auth state
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                console.log("Logged in:", user.uid);
+                fetchProducts();
+            } else {
+                console.log("No user");
+            }
+        });
+
+        // --- Data Operations ---
+
+        // Fetch Products (Read Public Data)
+        async function fetchProducts() {
+            if(isDemoMode) { renderEmptyState(); return; }
+
+            const grid = document.getElementById('products-grid');
+            try {
+                // IMPORTANT: Using the strict path format
+                const productsRef = collection(db, 'artifacts', appId, 'public', 'data', 'products');
+                const q = query(productsRef);
+                const snapshot = await getDocs(q);
+                
+                products = [];
+                snapshot.forEach(doc => {
+                    products.push({ id: doc.id, ...doc.data() });
+                });
+
+                if (products.length === 0) {
+                    renderEmptyState();
+                } else {
+                    renderProducts();
+                }
+            } catch (error) {
+                console.error("Fetch Error:", error);
+                
+                // FALLBACK: If permission denied (likely locked rules), show empty state
+                isDemoMode = true;
+                renderEmptyState();
+                if(error.code === 'permission-denied' || error.message.includes('permission')) {
+                     showToast("تنبيه: تعمل المنصة ببيانات تجريبية (لا توجد صلاحيات)", true);
+                }
+            }
+        }
+
+        // Add Product (Admin Only)
+        window.addNewProduct = async function() {
+            if(isDemoMode) {
+                showToast("لا يمكن النشر في الوضع التجريبي", true);
+                return;
+            }
+
+            const title = document.getElementById('new-prod-title').value;
+            const price = document.getElementById('new-prod-price').value;
+            const image = document.getElementById('new-prod-image').value;
+            const tag = document.getElementById('new-prod-tag').value;
+
+            if(!title || !price) {
+                showToast("يرجى ملء البيانات", true);
+                return;
+            }
+
+            const btn = document.querySelector('#admin-view-add button');
+            btn.innerHTML = '<div class="loader border-white/30 border-t-white w-5 h-5"></div>';
+            
+            try {
+                const productsRef = collection(db, 'artifacts', appId, 'public', 'data', 'products');
+                await addDoc(productsRef, {
+                    title,
+                    price,
+                    image: image || "https://images.unsplash.com/photo-1532012197267-da84d127e765?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+                    tag,
+                    createdAt: serverTimestamp()
+                });
+                
+                showToast("تم نشر البحث بنجاح");
+                document.getElementById('new-prod-title').value = "";
+                document.getElementById('new-prod-price').value = "";
+                fetchProducts();
+            } catch (e) {
+                console.error(e);
+                showToast("فشل النشر: " + e.message, true);
+            } finally {
+                btn.innerHTML = 'نشر في المتجر';
+            }
+        }
+
+        // Submit Order (Customer)
+        window.submitOrder = async function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('confirm-order-btn');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<div class="loader border-white/30 border-t-white"></div>';
+
+            // Collect Data
+            const name = document.getElementById('customer-name').value;
+            const phone = document.getElementById('customer-phone').value;
+            const address = document.getElementById('customer-address').value;
+            const itemName = document.getElementById('modal-item-name').innerText;
+            const itemId = document.getElementById('order-item-id').value;
+            const type = document.getElementById('order-item-type').value;
+
+            const orderData = {
+                customerName: name,
+                customerPhone: phone,
+                customerAddress: address,
+                itemName: itemName,
+                itemId: itemId,
+                type: type,
+                details: type === 'custom' ? document.getElementById('custom-details').value : "منتج جاهز",
+                status: 'pending',
+                orderDate: new Date().toISOString(),
+                timestamp: serverTimestamp()
+            };
+
+            try {
+                if(isDemoMode) {
+                    // Fake success in demo mode
+                    await new Promise(r => setTimeout(r, 1000));
+                    console.log("Demo Order Submitted:", orderData);
+                } else {
+                    const ordersRef = collection(db, 'artifacts', appId, 'public', 'data', 'orders');
+                    await addDoc(ordersRef, orderData);
+                }
+
+                closeOrderModal();
+                showToast("تم إرسال طلبك بنجاح! سيتصل بك المشرف قريباً.");
+                
+                document.getElementById('order-form').reset();
+                if(type === 'custom') {
+                    document.getElementById('custom-title').value = "";
+                    document.getElementById('custom-details').value = "";
+                    switchTab('home');
+                }
+
+            } catch (error) {
+                console.error(error);
+                showToast("حدث خطأ في الإرسال", true);
+            } finally {
+                btn.innerHTML = originalText;
+            }
+        }
+
+        // Fetch Orders (Admin)
+        async function fetchOrders() {
+            const list = document.getElementById('orders-list');
+            list.innerHTML = '<div class="text-center py-4"><div class="loader mx-auto"></div></div>';
+            
+            if (isDemoMode) {
+                list.innerHTML = `<div class="bg-slate-700/50 p-4 rounded-xl border border-yellow-600/50 text-center text-yellow-500 mb-4 text-xs">وضع العرض التجريبي (لا توجد بيانات حقيقية)</div>`;
+                return;
+            }
+
+            try {
+                const ordersRef = collection(db, 'artifacts', appId, 'public', 'data', 'orders');
+                const snapshot = await getDocs(ordersRef);
+                
+                let orders = [];
+                snapshot.forEach(doc => orders.push({id: doc.id, ...doc.data()}));
+                
+                orders.sort((a, b) => new Date(b.orderDate) - new Date(a.orderDate));
+
+                if (orders.length === 0) {
+                    list.innerHTML = '<div class="text-center text-slate-500 py-6">لا توجد طلبات حالياً</div>';
+                    return;
+                }
+
+                list.innerHTML = orders.map(order => `
+                    <div class="bg-slate-700/50 p-4 rounded-xl border border-slate-600">
+                        <div class="flex justify-between items-start mb-2">
+                            <div>
+                                <h4 class="font-bold text-white text-sm">${order.itemName}</h4>
+                                <span class="text-xs ${order.type === 'custom' ? 'text-purple-400' : 'text-blue-400'} bg-slate-800 px-2 py-0.5 rounded">${order.type === 'custom' ? 'طلب خاص' : 'شراء مباشر'}</span>
+                            </div>
+                            <span class="text-[10px] text-slate-400">${order.orderDate ? new Date(order.orderDate).toLocaleDateString('ar-IQ') : 'الآن'}</span>
+                        </div>
+                        <div class="space-y-1 text-xs text-slate-300 bg-slate-800 p-2 rounded-lg">
+                            <p><i class="fa-solid fa-user ml-2 w-4"></i> ${order.customerName}</p>
+                            <p><i class="fa-solid fa-phone ml-2 w-4"></i> ${order.customerPhone}</p>
+                            <p><i class="fa-solid fa-map-marker-alt ml-2 w-4"></i> ${order.customerAddress}</p>
+                            ${order.type === 'custom' ? `<p class="mt-2 pt-2 border-t border-slate-700 text-slate-400 italic">"${order.details}"</p>` : ''}
+                        </div>
+                        <div class="mt-3 flex gap-2">
+                            <a href="tel:${order.customerPhone}" class="flex-1 bg-green-600 hover:bg-green-500 text-center py-1.5 rounded-lg text-xs font-bold">اتصال</a>
+                        </div>
+                    </div>
+                `).join('');
+
+            } catch (error) {
+                console.error(error);
+                list.innerHTML = `<div class="text-red-400 text-center text-xs">خطأ: ${error.message}</div>`;
+            }
+        }
+
+        // --- UI Rendering ---
+
+        function renderProducts() {
+            const grid = document.getElementById('products-grid');
+            grid.innerHTML = products.map(product => `
+                <div class="glass-card rounded-2xl p-3 flex gap-4 items-center animate-fade-in relative group overflow-hidden">
+                    <div class="w-24 h-24 rounded-xl bg-slate-800 flex-shrink-0 overflow-hidden relative">
+                         <img src="${product.image}" alt="${product.title}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/100x100/1e293b/FFF?text=PDF'">
+                         <div class="absolute top-0 right-0 bg-blue-600 px-2 py-0.5 text-[10px] rounded-bl-lg text-white font-bold shadow">${product.price} د.ع</div>
+                    </div>
+                    <div class="flex-1">
+                        <span class="text-[10px] text-slate-400 border border-slate-600 px-1.5 py-0.5 rounded-md mb-1 inline-block">${product.tag || 'عام'}</span>
+                        <h3 class="font-bold text-base leading-tight mb-1 text-white">${product.title}</h3>
+                        <p class="text-xs text-slate-400 mb-3 line-clamp-2">بحث متكامل جاهز للطباعة والتعديل.</p>
+                        
+                        <button onclick="openOrderModal('${product.title}', '${product.price}', 'product', '${product.id}')" 
+                            class="bg-slate-700 hover:bg-blue-600 text-white text-xs py-2 px-4 rounded-lg w-full transition-colors flex items-center justify-center gap-2 btn-press border border-slate-600 hover:border-blue-500">
+                            <span>طلب الآن</span>
+                            <i class="fa-solid fa-cart-shopping text-[10px]"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderEmptyState() {
+            // Default products if DB is empty or fails
+            products = [
+                {id: '1', title: 'تأثير الذكاء الاصطناعي على التعليم', price: '5,000', tag: 'تقنية', image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=200&fit=crop&q=60'},
+                {id: '2', title: 'تقرير عن التلوث البيئي في العراق', price: '4,000', tag: 'بيئة', image: 'https://images.unsplash.com/photo-1611273426761-53c8577a3c18?w=200&fit=crop&q=60'},
+                {id: '3', title: 'مبادئ إدارة الموارد البشرية', price: '6,500', tag: 'إدارة', image: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=200&fit=crop&q=60'}
+            ];
+            renderProducts();
+        }
+
+        // --- UI Interactions ---
+
+        // Tabs
+        window.switchTab = function(tabName) {
+            document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
+            
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('text-blue-500');
+                btn.classList.add('text-slate-500');
+            });
+
+            if (tabName === 'home') {
+                document.getElementById('view-home').classList.remove('hidden');
+                document.querySelector('[data-target="view-home"]').classList.add('text-blue-500');
+                document.querySelector('[data-target="view-home"]').classList.remove('text-slate-500');
+            } else if (tabName === 'custom') {
+                document.getElementById('view-custom').classList.remove('hidden');
+                document.querySelector('[data-target="view-custom"]').classList.add('text-blue-500');
+                document.querySelector('[data-target="view-custom"]').classList.remove('text-slate-500');
+            } else if (tabName === 'admin') {
+                document.getElementById('view-admin').classList.remove('hidden');
+                document.querySelector('[data-target="view-admin"]').classList.add('text-blue-500');
+                document.querySelector('[data-target="view-admin"]').classList.remove('text-slate-500');
+                
+                if(isAdminLoggedIn) fetchOrders();
+            }
+        }
+
+        // Admin Auth
+        window.checkAdmin = function() {
+            const pass = document.getElementById('admin-password').value;
+            if (pass === 'alikuka') {
+                isAdminLoggedIn = true;
+                document.getElementById('admin-login-screen').classList.add('hidden');
+                document.getElementById('admin-dashboard').classList.remove('hidden');
+                fetchOrders();
+            } else {
+                document.getElementById('login-error').classList.remove('hidden');
+            }
+        }
+
+        window.logoutAdmin = function() {
+            isAdminLoggedIn = false;
+            document.getElementById('admin-password').value = '';
+            document.getElementById('admin-dashboard').classList.add('hidden');
+            document.getElementById('admin-login-screen').classList.remove('hidden');
+        }
+
+        window.switchAdminTab = function(tab) {
+            if(tab === 'orders') {
+                document.getElementById('admin-view-orders').classList.remove('hidden');
+                document.getElementById('admin-view-add').classList.add('hidden');
+                document.getElementById('tab-btn-orders').classList.add('bg-slate-600', 'text-white');
+                document.getElementById('tab-btn-orders').classList.remove('text-slate-400');
+                document.getElementById('tab-btn-add').classList.remove('bg-slate-600', 'text-white');
+                document.getElementById('tab-btn-add').classList.add('text-slate-400');
+                fetchOrders();
+            } else {
+                document.getElementById('admin-view-orders').classList.add('hidden');
+                document.getElementById('admin-view-add').classList.remove('hidden');
+                document.getElementById('tab-btn-add').classList.add('bg-slate-600', 'text-white');
+                document.getElementById('tab-btn-add').classList.remove('text-slate-400');
+                document.getElementById('tab-btn-orders').classList.remove('bg-slate-600', 'text-white');
+                document.getElementById('tab-btn-orders').classList.add('text-slate-400');
+            }
+        }
+
+        // Modal Logic
+        window.openOrderModal = function(title, price, type, id = 'new') {
+            if (type === 'custom') {
+                const customTitle = document.getElementById('custom-title').value;
+                if(!customTitle) {
+                    showToast('يرجى كتابة عنوان البحث', true);
+                    return;
+                }
+                title = customTitle;
+                price = "حسب الاتفاق";
+            }
+
+            document.getElementById('modal-item-name').innerText = title;
+            document.getElementById('order-item-id').value = id;
+            document.getElementById('order-item-type').value = type;
+            document.getElementById('order-item-price').value = price;
+            
+            const modal = document.getElementById('order-modal');
+            const content = document.getElementById('order-modal-content');
+            
+            modal.classList.remove('hidden');
+            setTimeout(() => {
+                content.classList.remove('translate-y-full');
+            }, 10);
+        }
+
+        window.closeOrderModal = function() {
+            const modal = document.getElementById('order-modal');
+            const content = document.getElementById('order-modal-content');
+            
+            content.classList.add('translate-y-full');
+            setTimeout(() => {
+                modal.classList.add('hidden');
+            }, 300);
+        }
+
+        // Toast
+        window.showToast = function(msg, isError = false) {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toast-message');
+            const icon = toast.querySelector('i');
+            
+            toastMsg.innerText = msg;
+            
+            if(isError) {
+                icon.className = 'fa-solid fa-circle-exclamation text-red-500';
+            } else {
+                icon.className = 'fa-solid fa-check-circle text-green-500';
+            }
+
+            toast.classList.remove('opacity-0', 'translate-y-[-20px]', 'pointer-events-none');
+            
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-[-20px]', 'pointer-events-none');
+            }, 3000);
+        }
+
+        // Start Auth Flow
+        initAuth();
+
+    </script>
+</body>
+</html>
