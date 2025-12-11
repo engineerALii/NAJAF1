@@ -75,6 +75,26 @@
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
+        
+        /* Modal Animation */
+        .modal-enter {
+            opacity: 0;
+            transform: scale(0.9);
+        }
+        .modal-enter-active {
+            opacity: 1;
+            transform: scale(1);
+            transition: opacity 0.2s, transform 0.2s;
+        }
+        .modal-exit {
+            opacity: 1;
+            transform: scale(1);
+        }
+        .modal-exit-active {
+            opacity: 0;
+            transform: scale(0.9);
+            transition: opacity 0.2s, transform 0.2s;
+        }
     </style>
 </head>
 <body class="text-white min-h-screen pb-24 selection:bg-blue-500 selection:text-white">
@@ -284,6 +304,26 @@
         </div>
     </div>
 
+    <!-- Delete Confirmation Modal (New) -->
+    <div id="delete-modal" class="fixed inset-0 z-[80] hidden flex items-center justify-center">
+        <!-- Backdrop -->
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeDeleteModal()"></div>
+        
+        <!-- Modal Content -->
+        <div class="bg-slate-800 p-6 rounded-2xl shadow-2xl relative z-10 w-11/12 max-w-sm text-center border border-slate-700 transform transition-all" id="delete-modal-box">
+            <div class="w-16 h-16 rounded-full bg-red-500/10 flex items-center justify-center mx-auto mb-4 border border-red-500/20">
+                <i class="fa-solid fa-trash-can text-red-500 text-2xl"></i>
+            </div>
+            <h3 class="text-lg font-bold text-white mb-2">حذف المنتج؟</h3>
+            <p class="text-slate-400 text-sm mb-6">هل أنت متأكد من رغبتك في حذف هذا البحث نهائياً؟ لا يمكن التراجع عن هذا الإجراء.</p>
+            
+            <div class="flex gap-3">
+                <button onclick="closeDeleteModal()" class="flex-1 py-3 rounded-xl bg-slate-700 text-slate-300 font-medium btn-press hover:bg-slate-600 transition-colors">إلغاء</button>
+                <button onclick="confirmDeleteAction()" class="flex-1 py-3 rounded-xl bg-red-600 text-white font-bold btn-press shadow-lg shadow-red-900/20 hover:bg-red-500 transition-colors">نعم، حذف</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Toast Notification -->
     <div id="toast" class="fixed top-6 left-1/2 transform -translate-x-1/2 bg-slate-800 border border-slate-600 text-white px-6 py-3 rounded-full shadow-2xl z-[70] flex items-center gap-3 transition-all duration-300 opacity-0 pointer-events-none translate-y-[-20px]">
         <i class="fa-solid fa-check-circle text-green-500"></i>
@@ -318,6 +358,7 @@
         let products = [];
         let isAdminLoggedIn = false;
         let isDemoMode = false; // Runs without DB if true
+        let productToDeleteId = null; // Stores ID for deletion
 
         // Initialize App
         async function initAuth() {
@@ -400,7 +441,7 @@
                         <button onclick="editProduct('${product.id}')" class="w-8 h-8 rounded-lg bg-blue-600/20 text-blue-400 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-colors">
                             <i class="fa-solid fa-pen text-xs"></i>
                         </button>
-                        <button onclick="deleteProduct('${product.id}')" class="w-8 h-8 rounded-lg bg-red-600/20 text-red-400 flex items-center justify-center hover:bg-red-600 hover:text-white transition-colors">
+                        <button onclick="openDeleteModal('${product.id}')" class="w-8 h-8 rounded-lg bg-red-600/20 text-red-400 flex items-center justify-center hover:bg-red-600 hover:text-white transition-colors">
                             <i class="fa-solid fa-trash text-xs"></i>
                         </button>
                     </div>
@@ -408,25 +449,47 @@
             `).join('');
         }
 
-        // Delete Product
-        window.deleteProduct = async function(id) {
-            if(!confirm('هل أنت متأكد من حذف هذا البحث؟')) return;
+        // --- Delete Logic ---
+        window.openDeleteModal = function(id) {
+            productToDeleteId = id;
+            const modal = document.getElementById('delete-modal');
+            const box = document.getElementById('delete-modal-box');
+            
+            modal.classList.remove('hidden');
+            // Simple animation class add
+            box.classList.add('modal-enter-active');
+            setTimeout(() => {
+                box.classList.remove('modal-enter-active');
+            }, 200);
+        }
+
+        window.closeDeleteModal = function() {
+            const modal = document.getElementById('delete-modal');
+            productToDeleteId = null;
+            modal.classList.add('hidden');
+        }
+
+        window.confirmDeleteAction = async function() {
+            if(!productToDeleteId) return;
             
             if(isDemoMode) {
                 showToast("لا يمكن الحذف في الوضع التجريبي", true);
+                closeDeleteModal();
                 return;
             }
 
             try {
-                await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'products', id));
+                await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'products', productToDeleteId));
                 showToast("تم الحذف بنجاح");
                 
                 // Refresh data
                 await fetchProducts();
-                fetchAdminProducts(); // Refresh admin view
+                fetchAdminProducts(); 
             } catch (error) {
                 console.error("Delete Error", error);
                 showToast("حدث خطأ أثناء الحذف", true);
+            } finally {
+                closeDeleteModal();
             }
         }
 
@@ -630,6 +693,18 @@
 
         function renderProducts() {
             const grid = document.getElementById('products-grid');
+            
+            if (products.length === 0) {
+                 grid.innerHTML = `
+                    <div class="text-center py-20 text-slate-500 col-span-1">
+                        <i class="fa-solid fa-box-open text-4xl mb-4 opacity-50"></i>
+                        <p>لا توجد بحوث معروضة حالياً.</p>
+                        <p class="text-xs mt-2 text-slate-600">سيتم نشر بحوث جديدة قريباً.</p>
+                    </div>
+                 `;
+                 return;
+            }
+
             grid.innerHTML = products.map(product => `
                 <div class="glass-card rounded-2xl p-3 flex gap-4 items-center animate-fade-in relative group overflow-hidden">
                     <div class="w-24 h-24 rounded-xl bg-slate-800 flex-shrink-0 overflow-hidden relative">
@@ -652,12 +727,8 @@
         }
 
         function renderEmptyState() {
-            // Default products if DB is empty or fails
-            products = [
-                {id: '1', title: 'تأثير الذكاء الاصطناعي على التعليم', price: '5,000', tag: 'تقنية', image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=200&fit=crop&q=60'},
-                {id: '2', title: 'تقرير عن التلوث البيئي في العراق', price: '4,000', tag: 'بيئة', image: 'https://images.unsplash.com/photo-1611273426761-53c8577a3c18?w=200&fit=crop&q=60'},
-                {id: '3', title: 'مبادئ إدارة الموارد البشرية', price: '6,500', tag: 'إدارة', image: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?w=200&fit=crop&q=60'}
-            ];
+            // Updated: Empty list as requested by user to "delete all products" (initial state)
+            products = [];
             renderProducts();
         }
 
