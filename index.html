@@ -410,7 +410,8 @@
         import { getFirestore, collection, addDoc, getDocs, serverTimestamp, query, orderBy, doc, deleteDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // --- Firebase Setup ---
-        const userProvidedConfig = {
+        // تم تحديث الإعدادات حسب طلبك لربط الموقع بقاعدة البيانات الخاصة بك
+        const firebaseConfig = {
             apiKey: "AIzaSyD6MRZ7d7J1333erYoBrUGqocJNdGNjB7w",
             authDomain: "neew-aec2b.firebaseapp.com",
             databaseURL: "https://neew-aec2b-default-rtdb.firebaseio.com",
@@ -420,12 +421,13 @@
             appId: "1:70112873200:web:b8ef2b3863be6f1bf39035"
         };
 
-        const firebaseConfig = (typeof __firebase_config !== 'undefined') ? JSON.parse(__firebase_config) : userProvidedConfig;
-        const appId = (typeof __app_id !== 'undefined') ? __app_id : "student-platform-default";
-        
+        // Initialize Firebase directly with your config
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
+        
+        // استخدام معرف التطبيق الخاص بك للمسارات
+        const appId = "neew-aec2b"; // أو يمكن تغييره لاسم مخصص داخل قاعدة البيانات
 
         // State
         let products = [];
@@ -440,15 +442,12 @@
         // Initialize App
         async function initAuth() {
             try {
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    await signInAnonymously(auth);
-                }
+                // Try anonymous sign-in first as we are likely using custom keys
+                await signInAnonymously(auth);
             } catch (error) {
-                console.error("Auth Init Error", error);
+                console.error("Auth Error", error);
                 isDemoMode = true;
-                showToast("وضع العرض (بدون اتصال)", true);
+                showToast("يرجى تفعيل الدخول المجهول في فايربيس", true);
                 renderEmptyState();
             }
         }
