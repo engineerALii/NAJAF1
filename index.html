@@ -104,7 +104,7 @@
         <div class="flex justify-between items-center px-5 py-4">
             <div>
                 <h1 class="text-2xl font-bold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">منصة الطالب</h1>
-                <p class="text-xs text-slate-400">متجرك الأول للبحوث والتقارير</p>
+                <p class="text-xs text-slate-400">متجرك الأول للبحوث والهدايا</p>
             </div>
             <div class="relative">
                 <div class="w-10 h-10 rounded-full bg-slate-800 flex items-center justify-center border border-slate-700 shadow-lg">
@@ -117,8 +117,9 @@
     <!-- Main Content Area -->
     <main id="main-content" class="pt-24 px-4 fade-in container mx-auto max-w-md">
         
-        <!-- VIEW: Home (Store) -->
+        <!-- VIEW: Home (Research Store) -->
         <div id="view-home" class="view-section">
+            <h2 class="text-lg font-bold mb-3 px-1 border-r-4 border-blue-500 pr-2">قسم البحوث والتقارير</h2>
             <!-- Search Bar -->
             <div class="mb-6 relative">
                 <input type="text" id="search-input" placeholder="ابحث عن تقرير أو بحث..." 
@@ -126,21 +127,45 @@
                 <i class="fa-solid fa-search absolute right-4 top-3.5 text-slate-500"></i>
             </div>
 
-            <!-- Categories -->
+            <!-- Categories Research -->
             <div class="flex gap-3 overflow-x-auto no-scrollbar mb-6 pb-2">
-                <button onclick="filterProducts('all')" data-cat="all" class="category-btn flex-shrink-0 px-5 py-2 rounded-full bg-blue-600 text-white text-sm font-medium shadow-lg shadow-blue-900/20 transition-all">الكل</button>
-                <button onclick="filterProducts('طبية')" data-cat="طبية" class="category-btn flex-shrink-0 px-5 py-2 rounded-full bg-slate-800 text-slate-300 text-sm font-medium border border-slate-700 transition-all">طبية</button>
-                <button onclick="filterProducts('هندسية')" data-cat="هندسية" class="category-btn flex-shrink-0 px-5 py-2 rounded-full bg-slate-800 text-slate-300 text-sm font-medium border border-slate-700 transition-all">هندسية</button>
-                <button onclick="filterProducts('قانون')" data-cat="قانون" class="category-btn flex-shrink-0 px-5 py-2 rounded-full bg-slate-800 text-slate-300 text-sm font-medium border border-slate-700 transition-all">قانون</button>
+                <button onclick="filterProducts('all', 'research')" data-cat="all" class="category-btn-research flex-shrink-0 px-5 py-2 rounded-full bg-blue-600 text-white text-sm font-medium shadow-lg shadow-blue-900/20 transition-all">الكل</button>
+                <button onclick="filterProducts('طبية', 'research')" data-cat="طبية" class="category-btn-research flex-shrink-0 px-5 py-2 rounded-full bg-slate-800 text-slate-300 text-sm font-medium border border-slate-700 transition-all">طبية</button>
+                <button onclick="filterProducts('هندسية', 'research')" data-cat="هندسية" class="category-btn-research flex-shrink-0 px-5 py-2 rounded-full bg-slate-800 text-slate-300 text-sm font-medium border border-slate-700 transition-all">هندسية</button>
+                <button onclick="filterProducts('قانون', 'research')" data-cat="قانون" class="category-btn-research flex-shrink-0 px-5 py-2 rounded-full bg-slate-800 text-slate-300 text-sm font-medium border border-slate-700 transition-all">قانون</button>
             </div>
 
             <!-- Products Grid -->
             <div id="products-grid" class="grid grid-cols-1 gap-4">
-                <!-- Products will be injected here via JS -->
                 <div class="text-center py-10 text-slate-500">
                     <div class="loader mx-auto mb-2"></div>
                     جارٍ تحميل البحوث...
                 </div>
+            </div>
+        </div>
+
+        <!-- VIEW: Gifts Store (New) -->
+        <div id="view-gifts" class="view-section hidden">
+            <h2 class="text-lg font-bold mb-3 px-1 border-r-4 border-purple-500 pr-2">الهدايا والمستلزمات</h2>
+            
+             <!-- Search Bar Gifts -->
+             <div class="mb-6 relative">
+                <input type="text" id="search-input-gifts" placeholder="ابحث عن هدية أو كتاب..." 
+                    class="w-full bg-slate-800/50 border border-slate-700 rounded-2xl py-3 pr-10 pl-4 text-sm focus:outline-none focus:border-purple-500 focus:ring-1 focus:ring-purple-500 transition-all placeholder-slate-500">
+                <i class="fa-solid fa-search absolute right-4 top-3.5 text-slate-500"></i>
+            </div>
+
+            <!-- Categories Gifts -->
+            <div class="flex gap-3 overflow-x-auto no-scrollbar mb-6 pb-2">
+                <button onclick="filterProducts('all', 'gift')" data-cat="all" class="category-btn-gift flex-shrink-0 px-5 py-2 rounded-full bg-purple-600 text-white text-sm font-medium shadow-lg shadow-purple-900/20 transition-all">الكل</button>
+                <button onclick="filterProducts('كتب', 'gift')" data-cat="كتب" class="category-btn-gift flex-shrink-0 px-5 py-2 rounded-full bg-slate-800 text-slate-300 text-sm font-medium border border-slate-700 transition-all">كتب</button>
+                <button onclick="filterProducts('هدايا', 'gift')" data-cat="هدايا" class="category-btn-gift flex-shrink-0 px-5 py-2 rounded-full bg-slate-800 text-slate-300 text-sm font-medium border border-slate-700 transition-all">هدايا وتخرج</button>
+                <button onclick="filterProducts('مستلزمات', 'gift')" data-cat="مستلزمات" class="category-btn-gift flex-shrink-0 px-5 py-2 rounded-full bg-slate-800 text-slate-300 text-sm font-medium border border-slate-700 transition-all">مستلزمات</button>
+            </div>
+
+            <!-- Gifts Grid -->
+            <div id="gifts-grid" class="grid grid-cols-2 gap-3">
+                 <!-- Injected via JS -->
             </div>
         </div>
 
@@ -150,12 +175,12 @@
             <div class="glass-card rounded-2xl p-5 shadow-lg">
                 <div class="space-y-4">
                     <div>
-                        <label class="block text-sm text-slate-400 mb-1">عنوان البحث / التقرير</label>
+                        <label class="block text-sm text-slate-400 mb-1">عنوان البحث / اسم الهدية</label>
                         <input type="text" id="custom-title" class="w-full bg-slate-900/50 border border-slate-700 rounded-xl p-3 focus:border-blue-500 outline-none transition-colors">
                     </div>
                     <div>
                         <label class="block text-sm text-slate-400 mb-1">التفاصيل المطلوبة</label>
-                        <textarea id="custom-details" rows="4" class="w-full bg-slate-900/50 border border-slate-700 rounded-xl p-3 focus:border-blue-500 outline-none transition-colors" placeholder="اكتب تفاصيل طلبك هنا..."></textarea>
+                        <textarea id="custom-details" rows="4" class="w-full bg-slate-900/50 border border-slate-700 rounded-xl p-3 focus:border-blue-500 outline-none transition-colors" placeholder="اكتب تفاصيل طلبك هنا (عنوان البحث، مواصفات الهدية، نوع الكتاب...)"></textarea>
                     </div>
                     <button onclick="openOrderModal('طلب خاص', 0, 'custom')" class="w-full bg-gradient-to-r from-blue-600 to-blue-500 py-3.5 rounded-xl font-bold shadow-lg shadow-blue-900/30 btn-press">
                         الانتقال لإكمال الطلب
@@ -212,7 +237,14 @@
 
                 <!-- Admin: Manage Products List -->
                 <div id="admin-view-products" class="hidden">
-                    <div id="admin-products-list" class="space-y-3">
+                     <!-- Filter Toggles for Admin -->
+                     <div class="flex gap-2 mb-4">
+                        <button onclick="filterAdminList('all')" id="filter-admin-all" class="flex-1 py-2 rounded-xl text-xs font-medium bg-slate-600 text-white transition-all shadow">الكل</button>
+                        <button onclick="filterAdminList('research')" id="filter-admin-research" class="flex-1 py-2 rounded-xl text-xs font-medium bg-slate-800 text-slate-400 border border-slate-700 transition-all">البحوث</button>
+                        <button onclick="filterAdminList('gift')" id="filter-admin-gift" class="flex-1 py-2 rounded-xl text-xs font-medium bg-slate-800 text-slate-400 border border-slate-700 transition-all">المتجر</button>
+                    </div>
+
+                    <div id="admin-products-list" class="space-y-3 pb-20">
                         <div class="text-center text-slate-500 py-4">جاري تحميل المنتجات...</div>
                     </div>
                 </div>
@@ -221,23 +253,60 @@
                 <div id="admin-view-add" class="hidden">
                     <div class="glass-card p-5 rounded-2xl space-y-4">
                         <div class="flex justify-between items-center">
-                            <h3 id="form-title" class="font-bold text-blue-400 mb-2">إضافة تقرير/بحث جديد</h3>
+                            <h3 id="form-title" class="font-bold text-blue-400 mb-2">إضافة منتج جديد</h3>
                             <button onclick="resetForm()" class="text-[10px] text-slate-400 bg-slate-800 px-2 py-1 rounded hidden" id="reset-form-btn">إلغاء التعديل</button>
                         </div>
                         
                         <input type="hidden" id="edit-prod-id">
                         
-                        <input type="text" id="new-prod-title" placeholder="عنوان البحث" class="w-full bg-slate-900 border border-slate-700 p-3 rounded-xl text-sm focus:border-blue-500 outline-none">
-                        <input type="number" id="new-prod-price" placeholder="السعر (د.ع)" class="w-full bg-slate-900 border border-slate-700 p-3 rounded-xl text-sm focus:border-blue-500 outline-none">
-                        <input type="text" id="new-prod-image" placeholder="رابط الصورة (URL)" class="w-full bg-slate-900 border border-slate-700 p-3 rounded-xl text-sm focus:border-blue-500 outline-none">
+                        <!-- Section Selector -->
+                        <div class="bg-slate-800 p-2 rounded-xl mb-2">
+                             <label class="block text-[10px] text-slate-400 mb-1 px-1">القسم</label>
+                             <div class="flex gap-2">
+                                <label class="flex-1 cursor-pointer">
+                                    <input type="radio" name="prod-section" value="research" class="peer hidden" checked>
+                                    <div class="text-center py-2 rounded-lg bg-slate-900 border border-slate-700 text-slate-400 peer-checked:bg-blue-600 peer-checked:text-white peer-checked:border-blue-500 text-xs transition-all">بحوث وتقارير</div>
+                                </label>
+                                <label class="flex-1 cursor-pointer">
+                                    <input type="radio" name="prod-section" value="gift" class="peer hidden">
+                                    <div class="text-center py-2 rounded-lg bg-slate-900 border border-slate-700 text-slate-400 peer-checked:bg-purple-600 peer-checked:text-white peer-checked:border-purple-500 text-xs transition-all">هدايا ومستلزمات</div>
+                                </label>
+                             </div>
+                        </div>
+
+                        <input type="text" id="new-prod-title" placeholder="العنوان" class="w-full bg-slate-900 border border-slate-700 p-3 rounded-xl text-sm focus:border-blue-500 outline-none">
+                        <input type="text" id="new-prod-price" placeholder="السعر (مثال: 15,000)" class="w-full bg-slate-900 border border-slate-700 p-3 rounded-xl text-sm focus:border-blue-500 outline-none">
+                        
+                        <!-- Image Input (URL + File) -->
+                        <div class="space-y-2">
+                            <input type="text" id="new-prod-image" placeholder="رابط الصورة (URL)" class="w-full bg-slate-900 border border-slate-700 p-3 rounded-xl text-sm focus:border-blue-500 outline-none">
+                            <div class="relative">
+                                <input type="file" id="new-prod-file" accept="image/*" class="hidden" onchange="handleFileSelect(this)">
+                                <label for="new-prod-file" class="flex items-center justify-center w-full p-3 bg-slate-800 border border-dashed border-slate-600 rounded-xl cursor-pointer hover:border-blue-500 text-xs text-slate-400 gap-2">
+                                    <i class="fa-solid fa-cloud-arrow-up"></i>
+                                    <span id="file-label">أو اختر صورة من الجهاز</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Tag Selector -->
                         <select id="new-prod-tag" class="w-full bg-slate-900 border border-slate-700 p-3 rounded-xl text-sm text-slate-400 outline-none">
-                            <option value="عام">عام</option>
-                            <option value="طبية">طبية</option>
-                            <option value="هندسية">هندسية</option>
-                            <option value="إدارة">إدارة واقتصاد</option>
-                            <option value="قانون">قانون</option>
+                            <optgroup label="بحوث وتقارير">
+                                <option value="عام">عام</option>
+                                <option value="طبية">طبية</option>
+                                <option value="هندسية">هندسية</option>
+                                <option value="إدارة">إدارة واقتصاد</option>
+                                <option value="قانون">قانون</option>
+                            </optgroup>
+                            <optgroup label="هدايا ومستلزمات">
+                                <option value="كتب">كتب وملازم</option>
+                                <option value="هدايا">هدايا وتخرج</option>
+                                <option value="مستلزمات">مستلزمات دراسية</option>
+                                <option value="طباعة">طباعة وتصوير</option>
+                            </optgroup>
                         </select>
-                        <button onclick="saveProduct()" id="save-prod-btn" class="w-full bg-green-600 hover:bg-green-500 py-3 rounded-xl font-bold btn-press shadow-lg shadow-green-900/20">نشر في المتجر</button>
+
+                        <button onclick="saveProduct()" id="save-prod-btn" class="w-full bg-green-600 hover:bg-green-500 py-3 rounded-xl font-bold btn-press shadow-lg shadow-green-900/20">نشر</button>
                     </div>
                 </div>
             </div>
@@ -248,15 +317,19 @@
     <!-- Bottom Navigation (iOS Style) -->
     <nav class="fixed bottom-0 w-full glass pb-safe-bottom z-50">
         <div class="flex justify-around items-center pt-3 pb-4 px-2">
-            <button onclick="switchTab('home')" class="nav-btn flex flex-col items-center gap-1 w-1/3 text-blue-500" data-target="view-home">
-                <i class="fa-solid fa-house text-xl mb-0.5"></i>
-                <span class="text-[10px] font-medium">الرئيسية</span>
+            <button onclick="switchTab('home')" class="nav-btn flex flex-col items-center gap-1 w-1/4 text-blue-500" data-target="view-home">
+                <i class="fa-solid fa-book-open text-xl mb-0.5"></i>
+                <span class="text-[10px] font-medium">البحوث</span>
             </button>
-            <button onclick="switchTab('custom')" class="nav-btn flex flex-col items-center gap-1 w-1/3 text-slate-500" data-target="view-custom">
+            <button onclick="switchTab('gifts')" class="nav-btn flex flex-col items-center gap-1 w-1/4 text-slate-500" data-target="view-gifts">
+                <i class="fa-solid fa-gift text-xl mb-0.5"></i>
+                <span class="text-[10px] font-medium">المتجر</span>
+            </button>
+            <button onclick="switchTab('custom')" class="nav-btn flex flex-col items-center gap-1 w-1/4 text-slate-500" data-target="view-custom">
                 <i class="fa-solid fa-pen-to-square text-xl mb-0.5"></i>
                 <span class="text-[10px] font-medium">طلب خاص</span>
             </button>
-            <button onclick="switchTab('admin')" class="nav-btn flex flex-col items-center gap-1 w-1/3 text-slate-500" data-target="view-admin">
+            <button onclick="switchTab('admin')" class="nav-btn flex flex-col items-center gap-1 w-1/4 text-slate-500" data-target="view-admin">
                 <i class="fa-solid fa-user-shield text-xl mb-0.5"></i>
                 <span class="text-[10px] font-medium">الإدارة</span>
             </button>
@@ -315,7 +388,7 @@
                 <i class="fa-solid fa-trash-can text-red-500 text-2xl"></i>
             </div>
             <h3 class="text-lg font-bold text-white mb-2">حذف المنتج؟</h3>
-            <p class="text-slate-400 text-sm mb-6">هل أنت متأكد من رغبتك في حذف هذا البحث نهائياً؟ لا يمكن التراجع عن هذا الإجراء.</p>
+            <p class="text-slate-400 text-sm mb-6">هل أنت متأكد من رغبتك في حذف هذا المنتج نهائياً؟ لا يمكن التراجع عن هذا الإجراء.</p>
             
             <div class="flex gap-3">
                 <button onclick="closeDeleteModal()" class="flex-1 py-3 rounded-xl bg-slate-700 text-slate-300 font-medium btn-press hover:bg-slate-600 transition-colors">إلغاء</button>
@@ -357,9 +430,12 @@
         // State
         let products = [];
         let isAdminLoggedIn = false;
-        let isDemoMode = false; // Runs without DB if true
-        let productToDeleteId = null; // Stores ID for deletion
-        let currentCategory = 'all';
+        let isDemoMode = false; 
+        let productToDeleteId = null;
+        let currentResearchCategory = 'all';
+        let currentGiftCategory = 'all';
+        let currentAdminFilter = 'all'; // For Admin Panel
+        let tempBase64Image = null; // Store base64 image temporarily
 
         // Initialize App
         async function initAuth() {
@@ -395,7 +471,6 @@
 
             const grid = document.getElementById('products-grid');
             try {
-                // IMPORTANT: Using the strict path format
                 const productsRef = collection(db, 'artifacts', appId, 'public', 'data', 'products');
                 const q = query(productsRef);
                 const snapshot = await getDocs(q);
@@ -409,34 +484,65 @@
                     renderEmptyState();
                 } else {
                     renderProducts();
+                    renderGifts();
+                    if(isAdminLoggedIn) fetchAdminProducts(); // Update admin view if logged in
                 }
             } catch (error) {
                 console.error("Fetch Error:", error);
-                
-                // FALLBACK: If permission denied (likely locked rules), show empty state
                 isDemoMode = true;
                 renderEmptyState();
                 if(error.code === 'permission-denied' || error.message.includes('permission')) {
-                     showToast("تنبيه: تعمل المنصة ببيانات تجريبية (لا توجد صلاحيات)", true);
+                     showToast("تنبيه: تعمل المنصة ببيانات تجريبية", true);
                 }
             }
+        }
+
+        // Filter for Admin List
+        window.filterAdminList = function(type) {
+            currentAdminFilter = type;
+            
+            // UI Toggle
+            const btnIds = ['all', 'research', 'gift'];
+            btnIds.forEach(id => {
+                const btn = document.getElementById(`filter-admin-${id}`);
+                if(id === type) {
+                    btn.classList.remove('bg-slate-800', 'text-slate-400', 'border', 'border-slate-700');
+                    btn.classList.add('bg-slate-600', 'text-white', 'shadow');
+                } else {
+                    btn.classList.add('bg-slate-800', 'text-slate-400', 'border', 'border-slate-700');
+                    btn.classList.remove('bg-slate-600', 'text-white', 'shadow');
+                }
+            });
+
+            fetchAdminProducts();
         }
 
         // Fetch Products for Admin List
         window.fetchAdminProducts = function() {
             const list = document.getElementById('admin-products-list');
             
-            if (products.length === 0) {
-                list.innerHTML = '<div class="text-center text-slate-500 py-6">لا توجد منتجات حالياً</div>';
+            // Filter list based on currentAdminFilter
+            let displayList = products;
+            if(currentAdminFilter === 'research') {
+                displayList = products.filter(p => !p.section || p.section === 'research');
+            } else if (currentAdminFilter === 'gift') {
+                displayList = products.filter(p => p.section === 'gift');
+            }
+
+            if (displayList.length === 0) {
+                list.innerHTML = '<div class="text-center text-slate-500 py-6">لا توجد منتجات في هذا القسم</div>';
                 return;
             }
 
-            list.innerHTML = products.map(product => `
-                <div class="bg-slate-700/50 p-3 rounded-xl border border-slate-600 flex items-center gap-3">
+            list.innerHTML = displayList.map(product => `
+                <div class="bg-slate-700/50 p-3 rounded-xl border border-slate-600 flex items-center gap-3 animate-fade-in">
                     <img src="${product.image}" class="w-12 h-12 rounded-lg object-cover bg-slate-800" onerror="this.src='https://placehold.co/100x100'">
                     <div class="flex-1 min-w-0">
                         <h4 class="font-bold text-white text-sm truncate">${product.title}</h4>
-                        <p class="text-[10px] text-slate-400">${product.price} د.ع</p>
+                        <div class="flex gap-2 text-[10px] text-slate-400">
+                             <span>${product.price}</span>
+                             <span class="border-r border-slate-600 pr-2">${product.section === 'gift' ? 'هدايا' : 'بحث'}</span>
+                        </div>
                     </div>
                     <div class="flex gap-2">
                         <button onclick="editProduct('${product.id}')" class="w-8 h-8 rounded-lg bg-blue-600/20 text-blue-400 flex items-center justify-center hover:bg-blue-600 hover:text-white transition-colors">
@@ -457,7 +563,6 @@
             const box = document.getElementById('delete-modal-box');
             
             modal.classList.remove('hidden');
-            // Simple animation class add
             box.classList.add('modal-enter-active');
             setTimeout(() => {
                 box.classList.remove('modal-enter-active');
@@ -482,10 +587,7 @@
             try {
                 await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'products', productToDeleteId));
                 showToast("تم الحذف بنجاح");
-                
-                // Refresh data
-                await fetchProducts();
-                fetchAdminProducts(); 
+                await fetchProducts(); // fetchProducts will call fetchAdminProducts
             } catch (error) {
                 console.error("Delete Error", error);
                 showToast("حدث خطأ أثناء الحذف", true);
@@ -494,43 +596,74 @@
             }
         }
 
-        // Edit Product (Setup Form)
+        // --- Add/Edit Logic ---
+
+        // File Selection
+        window.handleFileSelect = function(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    tempBase64Image = e.target.result;
+                    document.getElementById('file-label').innerText = "تم اختيار الصورة";
+                    document.getElementById('file-label').classList.add('text-green-400');
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
         window.editProduct = function(id) {
             const product = products.find(p => p.id === id);
             if(!product) return;
 
             document.getElementById('edit-prod-id').value = product.id;
             document.getElementById('new-prod-title').value = product.title;
-            document.getElementById('new-prod-price').value = product.price.replace(/[^\d]/g, ''); // Remove non-digits if formatted
-            document.getElementById('new-prod-image').value = product.image;
+            document.getElementById('new-prod-price').value = product.price;
+            document.getElementById('new-prod-image').value = product.image; // Keep URL if exists
             document.getElementById('new-prod-tag').value = product.tag || 'عام';
+            
+            // Set Section Correctly
+            const section = product.section || 'research';
+            const radios = document.getElementsByName('prod-section');
+            for(let radio of radios) {
+                if(radio.value === section) radio.checked = true;
+            }
 
             // UI Changes
-            document.getElementById('form-title').innerText = "تعديل البحث";
+            document.getElementById('form-title').innerText = "تعديل المنتج";
             document.getElementById('save-prod-btn').innerText = "حفظ التعديلات";
             document.getElementById('save-prod-btn').classList.remove('bg-green-600', 'hover:bg-green-500');
             document.getElementById('save-prod-btn').classList.add('bg-blue-600', 'hover:bg-blue-500');
             document.getElementById('reset-form-btn').classList.remove('hidden');
+            
+            tempBase64Image = null; // Reset temp image
+            document.getElementById('file-label').innerText = "أو اختر صورة جديدة";
+            document.getElementById('file-label').classList.remove('text-green-400');
 
             switchAdminTab('add-product');
         }
 
-        // Reset Form
         window.resetForm = function() {
             document.getElementById('edit-prod-id').value = "";
             document.getElementById('new-prod-title').value = "";
             document.getElementById('new-prod-price').value = "";
             document.getElementById('new-prod-image').value = "";
+            document.getElementById('new-prod-file').value = "";
             document.getElementById('new-prod-tag').value = "عام";
+            
+            // Default section
+            document.getElementsByName('prod-section')[0].checked = true;
 
-            document.getElementById('form-title').innerText = "إضافة تقرير/بحث جديد";
-            document.getElementById('save-prod-btn').innerText = "نشر في المتجر";
+            document.getElementById('form-title').innerText = "إضافة منتج جديد";
+            document.getElementById('save-prod-btn').innerText = "نشر";
             document.getElementById('save-prod-btn').classList.add('bg-green-600', 'hover:bg-green-500');
             document.getElementById('save-prod-btn').classList.remove('bg-blue-600', 'hover:bg-blue-500');
             document.getElementById('reset-form-btn').classList.add('hidden');
+            
+            tempBase64Image = null;
+            document.getElementById('file-label').innerText = "أو اختر صورة من الجهاز";
+            document.getElementById('file-label').classList.remove('text-green-400');
         }
 
-        // Save (Add or Update) Product
         window.saveProduct = async function() {
             if(isDemoMode) {
                 showToast("لا يمكن التعديل في الوضع التجريبي", true);
@@ -540,13 +673,22 @@
             const id = document.getElementById('edit-prod-id').value;
             const title = document.getElementById('new-prod-title').value;
             const price = document.getElementById('new-prod-price').value;
-            const image = document.getElementById('new-prod-image').value;
+            const imageUrl = document.getElementById('new-prod-image').value;
             const tag = document.getElementById('new-prod-tag').value;
+            
+            let section = 'research';
+            const radios = document.getElementsByName('prod-section');
+            for(let radio of radios) {
+                if(radio.checked) section = radio.value;
+            }
 
             if(!title || !price) {
-                showToast("يرجى ملء البيانات", true);
+                showToast("يرجى ملء العنوان والسعر", true);
                 return;
             }
+
+            // Determine Image source (File > URL > Placeholder)
+            let finalImage = tempBase64Image || imageUrl || "https://images.unsplash.com/photo-1532012197267-da84d127e765?w=500&auto=format&fit=crop&q=60";
 
             const btn = document.getElementById('save-prod-btn');
             const originalText = btn.innerText;
@@ -555,31 +697,30 @@
             try {
                 const productData = {
                     title,
-                    price: price.toLocaleString(), // Add simple formatting if needed
-                    image: image || "https://images.unsplash.com/photo-1532012197267-da84d127e765?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3",
+                    price,
+                    image: finalImage,
                     tag,
+                    section, // 'research' or 'gift'
                     updatedAt: serverTimestamp()
                 };
 
                 if (id) {
-                    // Update
                     await updateDoc(doc(db, 'artifacts', appId, 'public', 'data', 'products', id), productData);
-                    showToast("تم تحديث البحث بنجاح");
+                    showToast("تم تحديث المنتج");
                 } else {
-                    // Create
                     productData.createdAt = serverTimestamp();
                     const productsRef = collection(db, 'artifacts', appId, 'public', 'data', 'products');
                     await addDoc(productsRef, productData);
-                    showToast("تم نشر البحث بنجاح");
+                    showToast("تم النشر بنجاح");
                 }
                 
                 resetForm();
                 fetchProducts();
             } catch (e) {
                 console.error(e);
-                showToast("فشل العملية: " + e.message, true);
+                showToast("فشل العملية", true);
             } finally {
-                btn.innerText = id ? "حفظ التعديلات" : "نشر في المتجر";
+                btn.innerText = id ? "حفظ التعديلات" : "نشر";
             }
         }
 
@@ -590,7 +731,6 @@
             const originalText = btn.innerHTML;
             btn.innerHTML = '<div class="loader border-white/30 border-t-white"></div>';
 
-            // Collect Data
             const name = document.getElementById('customer-name').value;
             const phone = document.getElementById('customer-phone').value;
             const address = document.getElementById('customer-address').value;
@@ -613,17 +753,15 @@
 
             try {
                 if(isDemoMode) {
-                    // Fake success in demo mode
                     await new Promise(r => setTimeout(r, 1000));
-                    console.log("Demo Order Submitted:", orderData);
+                    console.log("Demo Order:", orderData);
                 } else {
                     const ordersRef = collection(db, 'artifacts', appId, 'public', 'data', 'orders');
                     await addDoc(ordersRef, orderData);
                 }
 
                 closeOrderModal();
-                showToast("تم إرسال طلبك بنجاح! سيتصل بك المشرف قريباً.");
-                
+                showToast("تم إرسال طلبك بنجاح!");
                 document.getElementById('order-form').reset();
                 if(type === 'custom') {
                     document.getElementById('custom-title').value = "";
@@ -645,17 +783,15 @@
             list.innerHTML = '<div class="text-center py-4"><div class="loader mx-auto"></div></div>';
             
             if (isDemoMode) {
-                list.innerHTML = `<div class="bg-slate-700/50 p-4 rounded-xl border border-yellow-600/50 text-center text-yellow-500 mb-4 text-xs">وضع العرض التجريبي (لا توجد بيانات حقيقية)</div>`;
+                list.innerHTML = `<div class="bg-slate-700/50 p-4 rounded-xl border border-yellow-600/50 text-center text-yellow-500 mb-4 text-xs">وضع العرض التجريبي</div>`;
                 return;
             }
 
             try {
                 const ordersRef = collection(db, 'artifacts', appId, 'public', 'data', 'orders');
                 const snapshot = await getDocs(ordersRef);
-                
                 let orders = [];
                 snapshot.forEach(doc => orders.push({id: doc.id, ...doc.data()}));
-                
                 orders.sort((a, b) => new Date(b.orderDate) - new Date(a.orderDate));
 
                 if (orders.length === 0) {
@@ -685,47 +821,48 @@
                 `).join('');
 
             } catch (error) {
-                console.error(error);
                 list.innerHTML = `<div class="text-red-400 text-center text-xs">خطأ: ${error.message}</div>`;
             }
         }
 
         // --- UI Rendering ---
 
-        window.filterProducts = function(category) {
-            currentCategory = category;
-            
-            // Update Buttons UI
-            document.querySelectorAll('.category-btn').forEach(btn => {
-                if(btn.dataset.cat === category) {
-                    // Active style
-                    btn.className = "category-btn flex-shrink-0 px-5 py-2 rounded-full bg-blue-600 text-white text-sm font-medium shadow-lg shadow-blue-900/20 transition-all";
-                } else {
-                    // Inactive style
-                    btn.className = "category-btn flex-shrink-0 px-5 py-2 rounded-full bg-slate-800 text-slate-300 text-sm font-medium border border-slate-700 transition-all";
-                }
-            });
-
-            renderProducts();
+        window.filterProducts = function(category, section) {
+            if(section === 'research') {
+                currentResearchCategory = category;
+                // UI update for Research buttons
+                document.querySelectorAll('.category-btn-research').forEach(btn => {
+                    if(btn.dataset.cat === category) btn.classList.replace('bg-slate-800', 'bg-blue-600');
+                    else btn.classList.replace('bg-blue-600', 'bg-slate-800');
+                });
+                renderProducts();
+            } else {
+                currentGiftCategory = category;
+                // UI update for Gift buttons
+                document.querySelectorAll('.category-btn-gift').forEach(btn => {
+                    if(btn.dataset.cat === category) btn.classList.replace('bg-slate-800', 'bg-purple-600');
+                    else btn.classList.replace('bg-purple-600', 'bg-slate-800');
+                });
+                renderGifts();
+            }
         }
 
+        // Render Research Products
         function renderProducts() {
             const grid = document.getElementById('products-grid');
             
-            // Filter Products based on category
-            let displayProducts = products;
-            if (currentCategory !== 'all') {
-                displayProducts = products.filter(p => p.tag === currentCategory);
+            // Filter Research products ONLY
+            let displayProducts = products.filter(p => !p.section || p.section === 'research');
+            
+            if (currentResearchCategory !== 'all') {
+                displayProducts = displayProducts.filter(p => p.tag === currentResearchCategory);
             }
 
             if (displayProducts.length === 0) {
-                 grid.innerHTML = `
-                    <div class="text-center py-20 text-slate-500 col-span-1">
+                 grid.innerHTML = `<div class="text-center py-20 text-slate-500 col-span-1">
                         <i class="fa-solid fa-box-open text-4xl mb-4 opacity-50"></i>
-                        <p>لا توجد بحوث في هذا القسم حالياً.</p>
-                        ${currentCategory !== 'all' ? `<button onclick="filterProducts('all')" class="text-blue-400 text-xs mt-2 underline">عرض الكل</button>` : ''}
-                    </div>
-                 `;
+                        <p>لا توجد بحوث في هذا القسم.</p>
+                    </div>`;
                  return;
             }
 
@@ -734,7 +871,7 @@
                     <div class="w-24 h-24 rounded-xl bg-slate-800 flex-shrink-0 overflow-hidden relative">
                          <img src="${product.image}" alt="${product.title}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/100x100/1e293b/FFF?text=PDF'">
                          <div class="absolute top-0 right-0 bg-blue-600 px-2 py-1 text-[10px] rounded-bl-lg text-white font-bold shadow text-center leading-3">
-                            ${product.price} د.ع
+                            ${product.price}
                             <div class="text-[8px] font-normal opacity-90">شامل التوصيل</div>
                          </div>
                     </div>
@@ -742,7 +879,6 @@
                         <span class="text-[10px] text-slate-400 border border-slate-600 px-1.5 py-0.5 rounded-md mb-1 inline-block">${product.tag || 'عام'}</span>
                         <h3 class="font-bold text-base leading-tight mb-1 text-white">${product.title}</h3>
                         <p class="text-xs text-slate-400 mb-3 line-clamp-2">بحث متكامل جاهز للطباعة والتعديل.</p>
-                        
                         <button onclick="openOrderModal('${product.title}', '${product.price}', 'product', '${product.id}')" 
                             class="bg-slate-700 hover:bg-blue-600 text-white text-xs py-2 px-4 rounded-lg w-full transition-colors flex items-center justify-center gap-2 btn-press border border-slate-600 hover:border-blue-500">
                             <span>طلب الآن</span>
@@ -753,30 +889,88 @@
             `).join('');
         }
 
-        function renderEmptyState() {
-            // Added 9 Dummy Products as requested (3 Medical, 3 Engineering, 3 Law)
-            products = [
-                // Medical (طبية)
-                { id: 'm1', title: 'تأثير المضادات الحيوية على البكتيريا', price: '15,000', tag: 'طبية', image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=500&auto=format&fit=crop&q=60' },
-                { id: 'm2', title: 'ارتفاع ضغط الدم: الأسباب والعلاج', price: '15,000', tag: 'طبية', image: 'https://images.unsplash.com/photo-1576091160550-217358c7e618?w=500&auto=format&fit=crop&q=60' },
-                { id: 'm3', title: 'دور التغذية في تعزيز المناعة', price: '15,000', tag: 'طبية', image: 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=500&auto=format&fit=crop&q=60' },
-                
-                // Engineering (هندسة الحاسوب)
-                { id: 'e1', title: 'مادة دوائر الكترونية (Electronic Circuits)', price: '15,000', tag: 'هندسية', image: 'https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?w=500&auto=format&fit=crop&q=60' },
-                { id: 'e2', title: 'معمارية الحاسوب (Computer Architecture)', price: '15,000', tag: 'هندسية', image: 'https://images.unsplash.com/photo-1555680202-c86f0e12f086?w=500&auto=format&fit=crop&q=60' },
-                { id: 'e3', title: 'الأنظمة المدمجة (Embedded Systems)', price: '15,000', tag: 'هندسية', image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=500&auto=format&fit=crop&q=60' },
+        // Render Gift Products
+        function renderGifts() {
+            const grid = document.getElementById('gifts-grid');
+            
+            // Filter Gift products ONLY
+            let displayProducts = products.filter(p => p.section === 'gift');
+            
+            if (currentGiftCategory !== 'all') {
+                displayProducts = displayProducts.filter(p => p.tag === currentGiftCategory);
+            }
 
+            if (displayProducts.length === 0) {
+                 grid.innerHTML = `<div class="text-center py-20 text-slate-500 col-span-2">
+                        <i class="fa-solid fa-gift text-4xl mb-4 opacity-50 text-purple-500"></i>
+                        <p>لا توجد منتجات في هذا القسم.</p>
+                    </div>`;
+                 return;
+            }
+
+            grid.innerHTML = displayProducts.map(product => `
+                <div class="glass-card rounded-2xl p-3 flex flex-col gap-2 animate-fade-in relative group overflow-hidden">
+                    <div class="w-full aspect-square rounded-xl bg-slate-800 overflow-hidden relative">
+                         <img src="${product.image}" alt="${product.title}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/200x200/1e293b/FFF?text=GIFT'">
+                         <div class="absolute bottom-2 right-2 bg-purple-600 px-2 py-1 text-[10px] rounded-lg text-white font-bold shadow opacity-90">
+                            ${product.price}
+                         </div>
+                    </div>
+                    <div>
+                        <span class="text-[9px] text-purple-300 bg-purple-900/30 px-1.5 py-0.5 rounded mb-1 inline-block">${product.tag || 'عام'}</span>
+                        <h3 class="font-bold text-sm leading-tight mb-1 text-white line-clamp-1">${product.title}</h3>
+                        <button onclick="openOrderModal('${product.title}', '${product.price}', 'product', '${product.id}')" 
+                            class="mt-2 bg-slate-700 hover:bg-purple-600 text-white text-xs py-2 w-full rounded-lg transition-colors btn-press border border-slate-600 hover:border-purple-500">
+                            طلب
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function renderEmptyState() {
+            products = [
+                // --- Research (بحوث) ---
+                
+                // Medical (طبية)
+                { id: 'm1', title: 'تأثير المضادات الحيوية', price: '15,000', tag: 'طبية', section: 'research', image: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=500&q=60' },
+                { id: 'm2', title: 'ارتفاع ضغط الدم: الأسباب والعلاج', price: '15,000', tag: 'طبية', section: 'research', image: 'https://images.unsplash.com/photo-1628348068343-c6a848d2b6dd?w=500&q=60' },
+                { id: 'm3', title: 'دور التغذية في تعزيز المناعة', price: '15,000', tag: 'طبية', section: 'research', image: 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?w=500&q=60' },
+                { id: 'm4', title: 'تقنيات التمريض الحديثة', price: '15,000', tag: 'طبية', section: 'research', image: 'https://images.unsplash.com/photo-1584515933487-779824d29309?w=500&q=60' },
+                { id: 'm5', title: 'الأمراض المعدية والوقاية منها', price: '15,000', tag: 'طبية', section: 'research', image: 'https://images.unsplash.com/photo-1584036561566-baf8f5f1b144?w=500&q=60' },
+
+                // Engineering (هندسة الحاسوب)
+                { id: 'e1', title: 'مادة دوائر الكترونية', price: '15,000', tag: 'هندسية', section: 'research', image: 'https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?w=500&q=60' },
+                { id: 'e2', title: 'معمارية الحاسوب', price: '15,000', tag: 'هندسية', section: 'research', image: 'https://images.unsplash.com/photo-1555680202-c86f0e12f086?w=500&q=60' },
+                { id: 'e3', title: 'الأنظمة المدمجة (Embedded Systems)', price: '15,000', tag: 'هندسية', section: 'research', image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=500&q=60' },
+                { id: 'e4', title: 'أمن المعلومات والشبكات', price: '15,000', tag: 'هندسية', section: 'research', image: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=500&q=60' },
+                { id: 'e5', title: 'إنترنت الأشياء (IoT)', price: '15,000', tag: 'هندسية', section: 'research', image: 'https://images.unsplash.com/photo-1558346490-a72e53ae2d4f?w=500&q=60' },
+                
                 // Law (قانون)
-                { id: 'l1', title: 'الحماية الجنائية للملكية الفكرية', price: '15,000', tag: 'قانون', image: 'https://images.unsplash.com/photo-1589829085413-56de8ae18c73?w=500&auto=format&fit=crop&q=60' },
-                { id: 'l2', title: 'حقوق الإنسان في الدساتير العربية', price: '15,000', tag: 'قانون', image: 'https://images.unsplash.com/photo-1453928582365-b6ad33cbcf64?w=500&auto=format&fit=crop&q=60' },
-                { id: 'l3', title: 'الجرائم الالكترونية في القانون العراقي', price: '15,000', tag: 'قانون', image: 'https://images.unsplash.com/photo-1505664194779-8beaceb93744?w=500&auto=format&fit=crop&q=60' }
+                { id: 'l1', title: 'الحماية الجنائية للملكية الفكرية', price: '15,000', tag: 'قانون', section: 'research', image: 'https://images.unsplash.com/photo-1589829085413-56de8ae18c73?w=500&q=60' },
+                { id: 'l2', title: 'حقوق الإنسان في الدساتير', price: '15,000', tag: 'قانون', section: 'research', image: 'https://images.unsplash.com/photo-1453928582365-b6ad33cbcf64?w=500&q=60' },
+                { id: 'l3', title: 'الجرائم الالكترونية في القانون', price: '15,000', tag: 'قانون', section: 'research', image: 'https://images.unsplash.com/photo-1505664194779-8beaceb93744?w=500&q=60' },
+
+                // --- Gifts & Accessories ---
+                { id: 'g1', title: 'ساعة رجالية فخمة', price: '25,000', tag: 'هدايا', section: 'gift', image: 'https://images.unsplash.com/photo-1523170335258-f5ed11844a49?w=500&q=60' },
+                { id: 'g2', title: 'بكج تخرج (درع + وشاح)', price: '30,000', tag: 'هدايا', section: 'gift', image: 'https://images.unsplash.com/photo-1523580494863-6f3031224c94?w=500&q=60' },
+                { id: 'g3', title: 'جلسة تصوير تخرج خاصة', price: '50,000', tag: 'هدايا', section: 'gift', image: 'https://images.unsplash.com/photo-1627556592933-ffe99c1cd9eb?w=500&q=60' },
+                { id: 'g4', title: 'لوحة تخرج خشبية', price: '10,000', tag: 'طباعة', section: 'gift', image: 'https://images.unsplash.com/photo-1577083552431-6e5fd01aa342?w=500&q=60' },
+                
+                // --- Supplies & Books ---
+                { id: 's1', title: 'حاسبة علمية Casio', price: '20,000', tag: 'مستلزمات', section: 'gift', image: 'https://images.unsplash.com/photo-1587145820266-a795ddd7d397?w=500&q=60' },
+                { id: 'b1', title: 'كتاب Clean Code (هندسة حاسوب)', price: '12,000', tag: 'كتب', section: 'gift', image: 'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=500&q=60' },
+                { id: 'b2', title: 'مصطلحات طبية (Medical Terms)', price: '10,000', tag: 'كتب', section: 'gift', image: 'https://images.unsplash.com/photo-1581093450021-4a7360e9a6b5?w=500&q=60' },
+                { id: 'b3', title: 'الوجيز في القانون المدني', price: '15,000', tag: 'كتب', section: 'gift', image: 'https://images.unsplash.com/photo-1589829085413-56de8ae18c73?w=500&q=60' },
+                { id: 'b4', title: 'English Grammar in Use', price: '8,000', tag: 'كتب', section: 'gift', image: 'https://images.unsplash.com/photo-1457369804613-52c61a468e7d?w=500&q=60' },
             ];
             renderProducts();
+            renderGifts();
+            if(isAdminLoggedIn) fetchAdminProducts();
         }
 
         // --- UI Interactions ---
 
-        // Tabs
         window.switchTab = function(tabName) {
             document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
             
@@ -789,6 +983,10 @@
                 document.getElementById('view-home').classList.remove('hidden');
                 document.querySelector('[data-target="view-home"]').classList.add('text-blue-500');
                 document.querySelector('[data-target="view-home"]').classList.remove('text-slate-500');
+            } else if (tabName === 'gifts') {
+                document.getElementById('view-gifts').classList.remove('hidden');
+                document.querySelector('[data-target="view-gifts"]').classList.add('text-blue-500');
+                document.querySelector('[data-target="view-gifts"]').classList.remove('text-slate-500');
             } else if (tabName === 'custom') {
                 document.getElementById('view-custom').classList.remove('hidden');
                 document.querySelector('[data-target="view-custom"]').classList.add('text-blue-500');
@@ -823,17 +1021,13 @@
         }
 
         window.switchAdminTab = function(tab) {
-            // Reset Tabs style
             ['orders', 'products', 'add'].forEach(t => {
                 const btn = document.getElementById(`tab-btn-${t}`);
-                if(t === 'add') t = 'add-product'; // fix naming inconsistency in logic
-                
-                // reset all to gray
+                if(t === 'add') t = 'add-product'; 
                 btn.classList.remove('bg-slate-600', 'text-white');
                 btn.classList.add('text-slate-400');
             });
             
-            // Hide all Views
             document.getElementById('admin-view-orders').classList.add('hidden');
             document.getElementById('admin-view-products').classList.add('hidden');
             document.getElementById('admin-view-add').classList.add('hidden');
@@ -854,10 +1048,6 @@
                 document.getElementById('admin-view-add').classList.remove('hidden');
                 document.getElementById('tab-btn-add').classList.add('bg-slate-600', 'text-white');
                 document.getElementById('tab-btn-add').classList.remove('text-slate-400');
-                // If switching manually, reset form to "Add Mode" if it was in "Edit Mode" but user clicked away
-                // But if we called this via editProduct(), we want to keep it.
-                // We can check if the call came from a button click event vs function call, 
-                // simpler is to just let the user see the form as is. If they want to clear, they use the cancel button.
             }
         }
 
@@ -866,7 +1056,7 @@
             if (type === 'custom') {
                 const customTitle = document.getElementById('custom-title').value;
                 if(!customTitle) {
-                    showToast('يرجى كتابة عنوان البحث', true);
+                    showToast('يرجى كتابة العنوان', true);
                     return;
                 }
                 title = customTitle;
@@ -897,7 +1087,6 @@
             }, 300);
         }
 
-        // Toast
         window.showToast = function(msg, isError = false) {
             const toast = document.getElementById('toast');
             const toastMsg = document.getElementById('toast-message');
@@ -912,7 +1101,6 @@
             }
 
             toast.classList.remove('opacity-0', 'translate-y-[-20px]', 'pointer-events-none');
-            
             setTimeout(() => {
                 toast.classList.add('opacity-0', 'translate-y-[-20px]', 'pointer-events-none');
             }, 3000);
